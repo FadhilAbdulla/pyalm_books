@@ -29,6 +29,7 @@ import {
   CreditCard,
   CheckCircle2,
 } from "lucide-react";
+import { SidebarData } from "@/common/SIdebarData";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,7 +41,8 @@ export function Layout({ children }: LayoutProps) {
   const [darkMode, setDarkMode] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
@@ -57,7 +59,7 @@ export function Layout({ children }: LayoutProps) {
   const quickCreateRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
 
-  const isActive = (href: string) => location.pathname === href;
+  const isActive = (href: string) => location.pathname.includes(href);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -86,13 +88,22 @@ export function Layout({ children }: LayoutProps) {
       if (orgRef.current && !orgRef.current.contains(event.target as Node)) {
         setOrgDropdownOpen(false);
       }
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setSearchOpen(false);
       }
-      if (quickCreateRef.current && !quickCreateRef.current.contains(event.target as Node)) {
+      if (
+        quickCreateRef.current &&
+        !quickCreateRef.current.contains(event.target as Node)
+      ) {
         setQuickCreateOpen(false);
       }
-      if (historyRef.current && !historyRef.current.contains(event.target as Node)) {
+      if (
+        historyRef.current &&
+        !historyRef.current.contains(event.target as Node)
+      ) {
         setHistoryOpen(false);
       }
     };
@@ -106,29 +117,104 @@ export function Layout({ children }: LayoutProps) {
     { label: "Tech Solutions Inc", category: "Customers" },
     { label: "QT-2024-001", category: "Quotes" },
     { label: "INV-2024-005", category: "Invoices" },
-  ].filter(item => item.label.toLowerCase().includes(searchQuery.toLowerCase()));
+  ].filter((item) =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const quickCreateOptions = [
-    { label: "New Customer", action: () => { navigate("/customers/new"); setQuickCreateOpen(false); } },
-    { label: "New Quote", action: () => { navigate("/quotes/new"); setQuickCreateOpen(false); } },
-    { label: "New Invoice", action: () => { navigate("/invoices/new"); setQuickCreateOpen(false); } },
-    { label: "New Expense", action: () => { setQuickCreateOpen(false); } },
+    {
+      label: "New Customer",
+      action: () => {
+        navigate("/customers/new");
+        setQuickCreateOpen(false);
+      },
+    },
+    {
+      label: "New Quote",
+      action: () => {
+        navigate("/quotes/new");
+        setQuickCreateOpen(false);
+      },
+    },
+    {
+      label: "New Invoice",
+      action: () => {
+        navigate("/invoices/new");
+        setQuickCreateOpen(false);
+      },
+    },
+    {
+      label: "New Expense",
+      action: () => {
+        setQuickCreateOpen(false);
+      },
+    },
   ];
 
   const recentActivity = [
-    { id: 1, text: "Invoice INV-2024-005 created", time: "2 mins ago", type: "invoice" },
-    { id: 2, text: "Payment received from Acme Corp", time: "1 hour ago", type: "payment" },
-    { id: 3, text: "New bill from Cloud Services", time: "3 hours ago", type: "expense" },
-    { id: 4, text: "Quote QT-2024-001 sent to Tech Solutions", time: "5 hours ago", type: "quote" },
-    { id: 5, text: "Customer Tech Solutions Inc added", time: "1 day ago", type: "customer" },
-    { id: 6, text: "Invoice INV-2024-004 marked as paid", time: "2 days ago", type: "invoice" },
-    { id: 7, text: "Expense report submitted", time: "3 days ago", type: "expense" },
-    { id: 8, text: "Quote QT-2024-003 converted to invoice", time: "4 days ago", type: "quote" },
-    { id: 9, text: "Customer Acme Corporation updated", time: "5 days ago", type: "customer" },
-    { id: 10, text: "Invoice INV-2024-003 created", time: "1 week ago", type: "invoice" },
+    {
+      id: 1,
+      text: "Invoice INV-2024-005 created",
+      time: "2 mins ago",
+      type: "invoice",
+    },
+    {
+      id: 2,
+      text: "Payment received from Acme Corp",
+      time: "1 hour ago",
+      type: "payment",
+    },
+    {
+      id: 3,
+      text: "New bill from Cloud Services",
+      time: "3 hours ago",
+      type: "expense",
+    },
+    {
+      id: 4,
+      text: "Quote QT-2024-001 sent to Tech Solutions",
+      time: "5 hours ago",
+      type: "quote",
+    },
+    {
+      id: 5,
+      text: "Customer Tech Solutions Inc added",
+      time: "1 day ago",
+      type: "customer",
+    },
+    {
+      id: 6,
+      text: "Invoice INV-2024-004 marked as paid",
+      time: "2 days ago",
+      type: "invoice",
+    },
+    {
+      id: 7,
+      text: "Expense report submitted",
+      time: "3 days ago",
+      type: "expense",
+    },
+    {
+      id: 8,
+      text: "Quote QT-2024-003 converted to invoice",
+      time: "4 days ago",
+      type: "quote",
+    },
+    {
+      id: 9,
+      text: "Customer Acme Corporation updated",
+      time: "5 days ago",
+      type: "customer",
+    },
+    {
+      id: 10,
+      text: "Invoice INV-2024-003 created",
+      time: "1 week ago",
+      type: "invoice",
+    },
   ];
 
-  const filteredHistory = recentActivity.filter(item =>
+  const filteredHistory = recentActivity.filter((item) =>
     item.text.toLowerCase().includes(historySearch.toLowerCase())
   );
 
@@ -162,7 +248,10 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Center: Search Bar - After Sidebar on Desktop */}
-            <div className="hidden lg:flex items-center gap-2 flex-1 max-w-md ml-4" ref={searchRef}>
+            <div
+              className="hidden lg:flex items-center gap-2 flex-1 max-w-md ml-4"
+              ref={searchRef}
+            >
               <div className="flex-1 relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <input
@@ -186,7 +275,9 @@ export function Layout({ children }: LayoutProps) {
                         className="w-full flex items-center justify-between px-3 py-2 text-xs hover:bg-muted transition-colors border-b border-border/30 last:border-0"
                       >
                         <span className="text-foreground">{item.label}</span>
-                        <span className="text-muted-foreground text-xs">{item.category}</span>
+                        <span className="text-muted-foreground text-xs">
+                          {item.category}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -223,13 +314,19 @@ export function Layout({ children }: LayoutProps) {
                             key={activity.id}
                             className="px-3 py-2 border-b border-border/30 hover:bg-muted transition-colors cursor-pointer last:border-0"
                           >
-                            <p className="text-xs font-medium text-foreground">{activity.text}</p>
-                            <p className="text-xs text-muted-foreground mt-0.5">{activity.time}</p>
+                            <p className="text-xs font-medium text-foreground">
+                              {activity.text}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {activity.time}
+                            </p>
                           </div>
                         ))
                       ) : (
                         <div className="px-3 py-4 text-center">
-                          <p className="text-xs text-muted-foreground">No matching activities</p>
+                          <p className="text-xs text-muted-foreground">
+                            No matching activities
+                          </p>
                         </div>
                       )}
                     </div>
@@ -453,186 +550,72 @@ export function Layout({ children }: LayoutProps) {
           >
             <nav className="flex flex-col gap-1 overflow-y-auto p-3 -mt-1.5">
               {/* Home */}
-              <Link
-                to="/dashboard"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                  isActive("/dashboard")
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                <LayoutDashboard size={16} />
-                <span>Home</span>
-              </Link>
-
-              {/* Sales Dropdown */}
-              <div>
-                <button
-                  onClick={() => setSalesOpen(!salesOpen)}
-                  className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                    isActive("/sales")
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                >
-                  <FileText size={16} />
-                  <span>Sales</span>
-                  <ChevronDown
-                    size={12}
-                    className={`ml-auto transition-transform ${salesOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {salesOpen && (
-                  <div className="ml-4 mt-1 space-y-1 border-l border-border/30 pl-2">
-                    <div className="group relative flex items-center">
-                      <Link
-                        to="/customers"
-                        onClick={() => setSidebarOpen(false)}
-                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-                      >
-                        <Users size={12} /> Customers
-                      </Link>
-                      <Link
-                        to="/customers/new"
-                        onClick={() => setSidebarOpen(false)}
-                        className="absolute left-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-primary text-white hover:shadow-lg hover:shadow-primary/50"
-                        title="Add Customer"
-                      >
-                        <Plus size={12} />
-                      </Link>
-                    </div>
-                    <div className="group relative flex items-center">
-                      <Link
-                        to="/quotes"
-                        onClick={() => setSidebarOpen(false)}
-                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-                      >
-                        <FileText size={12} /> Quotes
-                      </Link>
-                      <Link
-                        to="/quotes/new"
-                        onClick={() => setSidebarOpen(false)}
-                        className="absolute left-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-primary text-white hover:shadow-lg hover:shadow-primary/50"
-                        title="Add Quote"
-                      >
-                        <Plus size={12} />
-                      </Link>
-                    </div>
-                    <div className="group relative flex items-center">
-                      <Link
-                        to="/invoices"
-                        onClick={() => setSidebarOpen(false)}
-                        className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-                      >
-                        <Receipt size={12} /> Invoices
-                      </Link>
-                      <Link
-                        to="/invoices/new"
-                        onClick={() => setSidebarOpen(false)}
-                        className="absolute left-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-primary text-white hover:shadow-lg hover:shadow-primary/50"
-                        title="Add Invoice"
-                      >
-                        <Plus size={12} />
-                      </Link>
-                    </div>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <TrendingUp size={12} /> Recurring
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <FileText size={12} /> Challans
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <DollarSign size={12} /> Payments
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <CreditCard size={12} /> Credits
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Purchase Dropdown */}
-              <div>
-                <button
-                  onClick={() => setPurchasesOpen(!purchasesOpen)}
-                  className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                    isActive("/purchases")
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                >
-                  <ShoppingCart size={16} />
-                  <span>Purchase</span>
-                  <ChevronDown
-                    size={12}
-                    className={`ml-auto transition-transform ${purchasesOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {purchasesOpen && (
-                  <div className="ml-4 mt-1 space-y-1 border-l border-border/30 pl-2">
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <Users size={12} /> Vendors
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <DollarSign size={12} /> Expenses
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <TrendingUp size={12} /> Recurring
-                    </button>
-                    <Link
-                      to="/purchases"
-                      onClick={() => setSidebarOpen(false)}
-                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+              {SidebarData.map((it) =>
+                it.subItems ? (
+                  <div>
+                    <button
+                      onClick={() =>
+                        it.link === openSubMenu
+                          ? setOpenSubMenu(null)
+                          : setOpenSubMenu(it.link)
+                      }
+                      className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                        isActive(it.link)
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
                     >
-                      <Receipt size={12} /> Bills
-                    </Link>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <DollarSign size={12} /> Paid
+                      <it.icon size={16} />
+                      <span>{it.name}</span>
+                      <ChevronDown
+                        size={12}
+                        className={`ml-auto transition-transform ${it.link === openSubMenu ? "rotate-180" : ""}`}
+                      />
                     </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-                      <CreditCard size={12} /> Credits
-                    </button>
+                    {it.link === openSubMenu &&
+                      it.subItems.map((subIt) => (
+                        <div className="ml-4 mt-1 space-y-1 border-l border-border/30 pl-2">
+                          <div className="group relative flex items-center">
+                            <Link
+                              to={subIt.link}
+                              onClick={() => setSidebarOpen(false)}
+                              className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                                isActive(subIt.link)
+                                  ? "bg-primary/10 text-primary"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <subIt.icon size={12} /> {subIt.name}
+                            </Link>
+                            {subIt?.customItem && (
+                              <Link
+                                to={subIt.customItem.link}
+                                onClick={() => setSidebarOpen(false)}
+                                className="absolute right-0 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-light text-foreground hover:bg-primary hover:text-white  hover:shadow-primary/50"
+                                title={subIt.customItem.name}
+                              >
+                                <subIt.customItem.icon size={12} />
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                   </div>
-                )}
-              </div>
-
-              {/* Time Tracking */}
-              <Link
-                to="#"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
-              >
-                <Clock size={16} />
-                <span>Time Tracking</span>
-              </Link>
-
-              {/* Banking */}
-              <Link
-                to="/banking"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                  isActive("/banking")
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                <Wallet size={16} />
-                <span>Banking</span>
-              </Link>
-
-              {/* Reports */}
-              <Link
-                to="/reports"
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-                  isActive("/reports")
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                <BarChart3 size={16} />
-                <span>Reports</span>
-              </Link>
+                ) : (
+                  <Link
+                    to={it.link}
+                    onClick={() => setSidebarOpen(false)}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                      isActive(it.link)
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    <it.icon size={16} />
+                    <span>{it.name}</span>
+                  </Link>
+                )
+              )}
 
               {/* Settings at bottom */}
               <div className="mt-4 border-t border-border/30 pt-2">
