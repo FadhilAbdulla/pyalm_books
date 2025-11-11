@@ -14,6 +14,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import DataTable from "@/components/ui/dataTable";
+import { RedirectionRoutes } from "@/common/RedirectionRoutes";
 
 interface Customer {
   id: string;
@@ -190,13 +192,13 @@ export default function Customers() {
 
   // Pagination
   const totalPages = Math.ceil(
-    filteredAndSortedCustomers.length / recordsPerPage,
+    filteredAndSortedCustomers.length / recordsPerPage
   );
   const startIndex = (currentPage - 1) * recordsPerPage;
   const endIndex = startIndex + recordsPerPage;
   const paginatedCustomers = filteredAndSortedCustomers.slice(
     startIndex,
-    endIndex,
+    endIndex
   );
 
   const handleSort = (field: SortField) => {
@@ -216,47 +218,6 @@ export default function Customers() {
     setModalState({ isOpen: false, mode: "create" });
   };
 
-  const customerFields = [
-    {
-      id: "name",
-      label: "Customer Name",
-      type: "text" as const,
-      required: true,
-      placeholder: "Enter customer name",
-    },
-    {
-      id: "email",
-      label: "Email",
-      type: "email" as const,
-      required: true,
-      placeholder: "customer@example.com",
-    },
-    {
-      id: "phone",
-      label: "Phone",
-      type: "text" as const,
-      required: true,
-      placeholder: "+1-555-0000",
-    },
-    {
-      id: "city",
-      label: "City",
-      type: "text" as const,
-      required: true,
-      placeholder: "City name",
-    },
-    {
-      id: "status",
-      label: "Status",
-      type: "select" as const,
-      required: true,
-      options: [
-        { label: "Active", value: "Active" },
-        { label: "Inactive", value: "Inactive" },
-      ],
-    },
-  ];
-
   return (
     <Layout>
       <div className="space-y-4">
@@ -269,263 +230,17 @@ export default function Customers() {
             </p>
           </div>
           <Button
-            onClick={() => navigate("/customers/new")}
+            onClick={() => navigate(RedirectionRoutes.customerNew)}
             className="bg-primary text-white text-xs"
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className=" h-1 w-4" />
             Add Customer
           </Button>
         </div>
-
-        {/* Advanced Filter */}
-        <AdvancedFilter
-          filterOptions={[
-            {
-              id: "status",
-              label: "Status",
-              type: "select",
-              isPrimary: true,
-              options: [
-                { label: "Active", value: "Active" },
-                { label: "Inactive", value: "Inactive" },
-              ],
-            },
-            {
-              id: "date",
-              label: "Created Date",
-              type: "date-range",
-              isPrimary: true,
-            },
-            {
-              id: "amount",
-              label: "Total Amount",
-              type: "number-range",
-              isPrimary: false,
-            },
-            {
-              id: "city",
-              label: "City",
-              type: "multi-select",
-              isPrimary: false,
-              options: [
-                { label: "New York", value: "New York" },
-                { label: "San Francisco", value: "San Francisco" },
-                { label: "London", value: "London" },
-                { label: "Austin", value: "Austin" },
-                { label: "Boston", value: "Boston" },
-                { label: "Seattle", value: "Seattle" },
-                { label: "San Diego", value: "San Diego" },
-                { label: "Denver", value: "Denver" },
-              ],
-            },
-          ]}
-          onFilterChange={setFilters}
+        <DataTable
+          dataSource={[{ name: "customer", id: "123", key: "sample" }]}
+          tableKey={"customer"}
         />
-
-        {/* Results Info */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>
-            Showing {startIndex + 1}-
-            {Math.min(endIndex, filteredAndSortedCustomers.length)} of{" "}
-            {filteredAndSortedCustomers.length} customers
-          </span>
-          <div className="flex items-center gap-2">
-            <label className="text-xs">Records per page:</label>
-            <select
-              value={recordsPerPage}
-              onChange={(e) => {
-                setRecordsPerPage(parseInt(e.target.value));
-                setCurrentPage(1);
-              }}
-              className="rounded border border-border bg-background px-2 py-1 text-xs"
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Customers Table */}
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs whitespace-nowrap" style={{ minWidth: "600px" }}>
-              <thead className="border-b border-border bg-muted/50">
-                <tr>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    <button
-                      onClick={() => handleSort("name")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
-                    >
-                      Name
-                      <ArrowUpDown
-                        size={12}
-                        className={
-                          sortField === "name" ? "opacity-100" : "opacity-50"
-                        }
-                      />
-                    </button>
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    Email
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    Phone
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    City
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    Invoices
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    <button
-                      onClick={() => handleSort("totalAmount")}
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
-                    >
-                      Amount
-                      <ArrowUpDown
-                        size={12}
-                        className={
-                          sortField === "totalAmount"
-                            ? "opacity-100"
-                            : "opacity-50"
-                        }
-                      />
-                    </button>
-                  </th>
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
-                    Status
-                  </th>
-                  <th className="px-4 py-2 text-right font-semibold text-foreground">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedCustomers.map((customer) => (
-                  <tr
-                    key={customer.id}
-                    className="border-b border-border hover:bg-muted/50 transition-colors group"
-                  >
-                    <td className="px-4 py-2 font-medium">
-                      <button
-                        onClick={() => navigate(`/customers/view/${customer.id}`)}
-                        className="text-primary hover:underline transition-colors"
-                      >
-                        {customer.name}
-                      </button>
-                    </td>
-                    <td className="px-4 py-2 text-muted-foreground">
-                      {customer.email}
-                    </td>
-                    <td className="px-4 py-2 text-muted-foreground">
-                      {customer.phone}
-                    </td>
-                    <td className="px-4 py-2 text-muted-foreground">
-                      {customer.city}
-                    </td>
-                    <td className="px-4 py-2 text-foreground">
-                      {customer.totalInvoices}
-                    </td>
-                    <td className="px-4 py-2 font-semibold text-foreground">
-                      ${customer.totalAmount.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      <span
-                        className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                          customer.status === "Active"
-                            ? "bg-accent/10 text-accent"
-                            : "bg-muted/10 text-muted-foreground"
-                        }`}
-                      >
-                        {customer.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2">
-                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => navigate(`/customers/${customer.id}`)}
-                          className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                          title="Edit"
-                        >
-                          <Edit size={12} />
-                        </button>
-                        <button
-                          onClick={() => window.location.href = `mailto:${customer.email}`}
-                          className="p-1.5 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
-                          title="Email"
-                        >
-                          <Mail size={12} />
-                        </button>
-                        <button
-                          onClick={() =>
-                            setModalState({
-                              isOpen: true,
-                              mode: "delete",
-                              customer,
-                            })
-                          }
-                          className="p-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-
-        {paginatedCustomers.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground text-xs">
-            No customers found matching your filters
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <div className="text-xs text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={14} />
-              </Button>
-              {Array.from({ length: totalPages }).map((_, idx) => (
-                <Button
-                  key={idx + 1}
-                  variant={currentPage === idx + 1 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentPage(idx + 1)}
-                  className="text-xs w-8 h-8"
-                >
-                  {idx + 1}
-                </Button>
-              ))}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setCurrentPage(Math.min(totalPages, currentPage + 1))
-                }
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRight size={14} />
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Delete Confirmation Modal */}

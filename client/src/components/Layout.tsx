@@ -48,8 +48,6 @@ export function Layout({ children }: LayoutProps) {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historySearch, setHistorySearch] = useState("");
-  const [salesOpen, setSalesOpen] = useState(false);
-  const [purchasesOpen, setPurchasesOpen] = useState(false);
   const [orgDropdownOpen, setOrgDropdownOpen] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -541,14 +539,14 @@ export function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Layout with Sidebar & Content */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden ">
           {/* Sidebar */}
           <aside
             className={`fixed left-0 top-0 z-40 h-screen w-56 transform bg-card transition-transform duration-300 ease-in-out border-r border-border/30 ${
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             } lg:static lg:translate-x-0`}
           >
-            <nav className="flex flex-col gap-1 overflow-y-auto p-3 -mt-1.5">
+            <nav className="flex flex-col gap-1 overflow-y-auto p-3 -mt-1.5 ">
               {/* Home */}
               {SidebarData.map((it) =>
                 it.subItems ? (
