@@ -11,7 +11,7 @@ export const TableColumns: Column[] = [
     {
         name: "Name",
         key: "name",
-        redirect: RedirectionRoutes.customerEdit,
+        redirect: RedirectionRoutes.customerDetail,
         sort: true
     },
     {

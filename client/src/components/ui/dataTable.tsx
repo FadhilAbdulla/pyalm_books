@@ -18,6 +18,8 @@ import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
+  ArrowDown,
+  ArrowUp,
 } from "lucide-react";
 import { TableColumns } from "@/common/data/table.data";
 import {
@@ -40,20 +42,27 @@ const DataTable = ({ dataSource, tableKey }) => {
   const per_page = Number(searchParams.get("per_page")) || 10;
   const page_number = Number(searchParams.get("page")) || 1;
 
-  const filterfunctions = {
-    sort: (key: string, order: SortOrder) =>
-      `sort_column=${key}&sort_order=${order}`,
-    status: (status: SortOrder) => `status=${status}`,
-    per_page: (count: string) => `per_page=${count}`,
-    page_number: (number: string) => `page=${number}`,
+  // const filterfunctions = {
+  //   sort: (key: string, order: SortOrder) =>
+  //     `sort_column=${key}&sort_order=${order}`,
+  //   status: (status: SortOrder) => `status=${status}`,
+  //   per_page: (count: string) => `per_page=${count}`,
+  //   page_number: (number: string) => `page=${number}`,
+  // };
+  const updateSearchParams = (updates: Record<string, string>) => {
+    const newParams = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) =>
+      newParams.set(key, value)
+    );
+    setSearchParams(newParams);
   };
 
   const FilterUpdateFunction = {
-    page_number: (number: string) => {
-      const newParams = new URLSearchParams(searchParams);
-      newParams.set("page", number);
-      setSearchParams(newParams);
-    },
+    page_number: (page: string) => updateSearchParams({ page }),
+    sort: (key: string, order: SortOrder) =>
+      updateSearchParams({ sort_column: key, sort_order: order }),
+    status: (status: SortOrder) => updateSearchParams({ status }),
+    per_page: (count: string) => updateSearchParams({ per_page: count }),
   };
 
   interface Customer {
@@ -78,9 +87,9 @@ const DataTable = ({ dataSource, tableKey }) => {
 
   const handleSort = (field: string) => {
     if (sort_column === field) {
-      ParamChange(filterfunctions.sort(field, sort_order === "A" ? "B" : "A"));
+      FilterUpdateFunction.sort(field, sort_order === "A" ? "B" : "A");
     } else {
-      ParamChange(filterfunctions.sort(field, "A"));
+      FilterUpdateFunction.sort(field, "A");
     }
   };
 
@@ -91,8 +100,7 @@ const DataTable = ({ dataSource, tableKey }) => {
   const paginatedCustomers = [];
 
   const sortOptions = [
-    { label: "Name (A-Z)", value: "name" },
-    { label: "Name (Z-A)", value: "name-desc" },
+    { label: "Name", value: "name" },
     { label: "Phone", value: "phone" },
     { label: "Email", value: "email" },
     { label: "Date Added", value: "date" },
@@ -124,9 +132,7 @@ const DataTable = ({ dataSource, tableKey }) => {
           <label className="text-xs">Records per page:</label>
           <select
             value={per_page}
-            onChange={(e) =>
-              ParamChange(filterfunctions.per_page(e.target.value))
-            }
+            onChange={(e) => FilterUpdateFunction.per_page(e.target.value)}
             className="rounded border border-border bg-background px-2 py-1 text-xs"
           >
             {PerPageCount.map((it) => (
@@ -153,14 +159,17 @@ const DataTable = ({ dataSource, tableKey }) => {
                         className="flex items-center gap-1 hover:text-primary transition-colors"
                       >
                         {it.name}
-                        <ArrowUpDown
-                          size={12}
-                          className={
-                            sort_column === it.key
-                              ? "opacity-100"
-                              : "opacity-50"
-                          }
-                        />
+
+                        {sort_column === it.key ? (
+                          // <span className="text-blue-600">✓</span>
+                          sort_order === "A" ? (
+                            <ArrowUp size={12} className="text-blue-400" />
+                          ) : (
+                            <ArrowDown size={12} className="text-blue-400" />
+                          )
+                        ) : (
+                          ""
+                        )}
                       </button>
                     ) : (
                       <th className="px-4 py-2 text-left font-semibold text-foreground">

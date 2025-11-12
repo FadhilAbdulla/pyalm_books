@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, X } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 
 interface FilterOption {
@@ -21,7 +21,17 @@ export function SimpleFilter({
 
   const [searchParams, setSearchParams] = useSearchParams();
   const sort_column = searchParams.get("sort_column") || null;
+  const sort_order = searchParams.get("sort_order") || null;
   const status = searchParams.get("status") || null;
+
+  const handleSort = (value: string) => {
+    if (sort_column === value) {
+      handleFilterChange("sort_order", sort_order === "A" ? "B" : "A");
+    } else {
+      handleFilterChange("sort_order", "A");
+      handleFilterChange("sort_column", value);
+    }
+  };
 
   const handleFilterChange = (filterId: string, value: string) => {
     searchParams.set(filterId, value);
@@ -34,8 +44,11 @@ export function SimpleFilter({
     searchParams.delete(filterId);
     if (filterId === "sort_column") {
       searchParams.delete("sort_column");
+      searchParams.delete("sort_order");
     }
     setSearchParams(searchParams);
+    setShowSortDropdown(false);
+    setShowCategoryDropdown(false);
   };
 
   const handleClearAll = () => {
@@ -43,6 +56,8 @@ export function SimpleFilter({
       searchParams.delete(key)
     );
     setSearchParams(searchParams);
+    setShowSortDropdown(false);
+    setShowCategoryDropdown(false);
   };
 
   const getFilterLabel = (sortOptions: FilterOption[], value: string) => {
@@ -100,13 +115,20 @@ export function SimpleFilter({
                 {sortOptions.map((opt) => (
                   <button
                     key={`sort_column-${opt.value}`}
-                    onClick={() => handleFilterChange("sort_column", opt.value)}
-                    className="w-full text-left px-4 py-2 text-xs hover:bg-gray-100 transition-colors flex items-center gap-2"
+                    onClick={() => handleSort(opt.value)}
+                    className={`w-full text-left px-4 py-2 text-xs hover:bg-gray-100 transition-colors flex items-center gap-2 justify-between ${sort_column === opt.value && "bg-blue-50"}`}
                   >
-                    {sort_column === opt.value && (
-                      <span className="text-blue-600">✓</span>
-                    )}
                     {opt.label}
+                    {sort_column === opt.value ? (
+                      // <span className="text-blue-600">✓</span>
+                      sort_order === "A" ? (
+                        <ArrowUp size={14} className="text-blue-400" />
+                      ) : (
+                        <ArrowDown size={14} className="text-blue-400" />
+                      )
+                    ) : (
+                      ""
+                    )}
                   </button>
                 ))}
               </div>
