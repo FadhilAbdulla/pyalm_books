@@ -635,7 +635,9 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto bg-card">
-            <div className="p-3 lg:p-6">
+            <div
+              className={`p-3 ${!location.pathname.includes("view") && "lg:p-6"}`}
+            >
               <div className="mx-auto max-w-7xl">{children}</div>
             </div>
           </main>

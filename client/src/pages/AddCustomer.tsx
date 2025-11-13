@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { RedirectionRoutes } from "@/common/RedirectionRoutes";
 
 export default function AddCustomer() {
   const { id } = useParams();
@@ -78,10 +79,12 @@ export default function AddCustomer() {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
-    navigate("/customers");
+    navigate(RedirectionRoutes.customer);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
@@ -96,7 +99,7 @@ export default function AddCustomer() {
         <div className="flex-shrink-0 border-b border-border pb-4 pt-0">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate("/customers")}
+              onClick={() => navigate(RedirectionRoutes.customer)}
               className="p-1 rounded-lg hover:bg-muted transition-colors"
               title="Back"
             >
@@ -107,7 +110,9 @@ export default function AddCustomer() {
                 {isEditing ? "Edit Customer" : "Add Customer"}
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing ? "Update customer information" : "Create a new customer record"}
+                {isEditing
+                  ? "Update customer information"
+                  : "Create a new customer record"}
               </p>
             </div>
           </div>
@@ -155,7 +160,9 @@ export default function AddCustomer() {
                   }`}
                 />
                 {errors.email && (
-                  <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.email}
+                  </p>
                 )}
               </div>
 
@@ -176,7 +183,9 @@ export default function AddCustomer() {
                   }`}
                 />
                 {errors.phone && (
-                  <p className="text-xs text-destructive mt-1">{errors.phone}</p>
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.phone}
+                  </p>
                 )}
               </div>
 
@@ -229,11 +238,15 @@ export default function AddCustomer() {
               onClick={handleSubmit}
               className="bg-primary text-white text-sm"
             >
-              {isLoading ? "Saving..." : isEditing ? "Update Customer" : "Add Customer"}
+              {isLoading
+                ? "Saving..."
+                : isEditing
+                  ? "Update Customer"
+                  : "Add Customer"}
             </Button>
             <Button
               type="button"
-              onClick={() => navigate("/customers")}
+              onClick={() => navigate(RedirectionRoutes.customer)}
               variant="outline"
               className="text-sm"
             >

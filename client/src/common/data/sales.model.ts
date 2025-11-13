@@ -6,7 +6,7 @@ export interface Customer {
     last_name: string;
     salutation: Salutation;
     company_name?: string;
-    email_address?: string;
+    email?: string;
     phone?: string;
     language: string;
 

@@ -7,3 +7,7 @@ export const getNavigationLink = (link: string, id: string | number): string => 
     return link.replace(':id', String(id));
 };
 
+export interface DropDownItem {
+    label: string;
+    value: string;
+}
