@@ -54,7 +54,7 @@ export const SidebarData: MainItem[] = [
   },
   {
     name: "Sales",
-    link: RedirectionRoutes.sales,
+    link: RedirectionRoutes.customer,
     icon: FileText,
     subItems: [
       {
@@ -148,7 +148,7 @@ export const SidebarData: MainItem[] = [
   },
   {
     name: "Time Tracking",
-    link: RedirectionRoutes.dashboard,
+    link: "test",
     icon: Clock,
   },
   {

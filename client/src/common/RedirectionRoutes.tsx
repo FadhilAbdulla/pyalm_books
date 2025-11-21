@@ -1,40 +1,13 @@
+import { CommonRoutes } from "./data/common.routes";
+import { PublicRoutes } from "./data/public.routes";
+import { SalesRoutes } from "./data/sales.routes";
+
 export const RedirectionRoutes = {
-  index: "/",
-  signIn: "/signin",
-  signUp: "/signup",
-  dashboard: "/dashboard",
-  //sales
-  sales: "/sales",
-  customer: "/sales/customers",
-  customerNew: "/sales/customers/new",
-  customerDetail: "/sales/customers/view/:id",
-  customerEdit: "/sales/customers/:id",
-  quotes: "/sales/quotes",
-  quotesNew: "/sales/quotes/new",
-  quotesDetail: "/sales/quotes/detail/:id",
-  quotesEdit: "/sales/quotes/:id",
-  invoices: "/sales/invoices",
-  invoicesNew: "/sales/invoices/new",
-  invoicesEdit: "/sales/invoices/:id",
-  recurring: "/sales/recurring",
-  recurringNew: "/sales/recurring/new",
-  recurringEdit: "/sales/recurring/:id",
-  challans: "/sales/challans",
-  challansNew: "/sales/challans/new",
-  challansEdit: "/sales/challans/:id",
-  payments: "/sales/payments",
-  paymentsNew: "/sales/payments/new",
-  paymentsEdit: "/sales/payments/:id",
-  credits: "/sales/credits",
-  creditsNew: "/sales/credits/new",
-  creditsEdit: "/sales/credits/:id",
+  ...PublicRoutes,
+  ...SalesRoutes,
+  ...CommonRoutes,
+
   //purchase
   purchase: "/purchases",
-  banking: "/banking",
   inventory: "inventory",
-  reports: "/reports",
-  settings: "/settings",
-  subscription: "/subscription",
-  organization: "/organization",
-  uiComponents: "/ui-components",
 };

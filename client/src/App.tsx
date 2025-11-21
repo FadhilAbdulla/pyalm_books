@@ -7,8 +7,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import NotFound from "./pages/NotFound";
-import { PrivateRoutes, PublicRoutes } from "./common/Routes";
+import { PrivateRoutes } from "./common/Routes";
+import { PublicRouteElement } from "./common/data/public.routes";
+import NotFound from "./pages/Public/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -19,11 +20,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {PublicRoutes.map((it) => (
-            <Route path={it.path} element={it.element} />
+          {PublicRouteElement.map((it) => (
+            <Route key={it.path} path={it.path} element={it.element} />
           ))}
           {PrivateRoutes.map((rt) => (
-            <Route path={rt.path} element={rt.element} />
+            <Route key={rt.path} path={rt.path} element={rt.element} />
           ))}
           <Route path="*" element={<NotFound />} />
         </Routes>

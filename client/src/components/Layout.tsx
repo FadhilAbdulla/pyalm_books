@@ -30,6 +30,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { SidebarData } from "@/common/SIdebarData";
+import { RedirectionRoutes } from "@/common/RedirectionRoutes";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -216,12 +217,35 @@ export function Layout({ children }: LayoutProps) {
     item.text.toLowerCase().includes(historySearch.toLowerCase())
   );
 
+  // Determine a context-aware search placeholder based on the current route
+  const getSearchPlaceholder = (): string => {
+    const segments = location.pathname.split("/").filter(Boolean);
+    const mapping: Record<string, string> = {
+      customers: "Search customer",
+      invoices: "Search invoice",
+      quotes: "Search quote",
+      purchases: "Search purchase",
+      products: "Search product",
+      inventory: "Search inventory",
+      payments: "Search payment",
+      credits: "Search credit",
+      recurring: "Search recurring",
+      reports: "Search report",
+      sales: "Search sale",
+      subscription: "Search subscription",
+      banking: "Search banking",
+    };
+
+    const matched = segments.find((s) => Boolean(mapping[s]));
+    return matched ? mapping[matched] : "Search...";
+  };
+
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="flex h-screen flex-col bg-background text-foreground">
         {/* Top Header */}
         <header className="z-50 bg-card border-b border-border/30">
-          <div className="flex items-center justify-between gap-4 px-3 py-2.5 lg:px-6">
+          <div className="flex items-center gap-4 px-3 py-2.5 lg:px-6">
             {/* Left: Logo & Sidebar Toggle */}
             <div className="flex items-center gap-3 flex-shrink-0">
               <button
@@ -231,7 +255,7 @@ export function Layout({ children }: LayoutProps) {
                 {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
               </button>
               <Link
-                to="/dashboard"
+                to={RedirectionRoutes.dashboard}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
                 <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-r from-primary to-accent">
@@ -245,9 +269,13 @@ export function Layout({ children }: LayoutProps) {
               </Link>
             </div>
 
-            {/* Center: Search Bar - After Sidebar on Desktop */}
+            {/* Spacer for sidebar width on desktop */}
+            <div className="hidden lg:block  flex-shrink-0" />
+
+            {/* Center: Search Bar - After Sidebar on Desktop, left-aligned */}
             <div
-              className="hidden lg:flex items-center gap-2 flex-1 max-w-md ml-4"
+              className="hidden lg:flex items-center gap-2 flex-1 max-w-md"
+              style={{ marginLeft: "100px" }}
               ref={searchRef}
             >
               <div className="flex-1 relative">
@@ -260,7 +288,7 @@ export function Layout({ children }: LayoutProps) {
                     setSearchOpen(true);
                   }}
                   onFocus={() => setSearchOpen(true)}
-                  placeholder="Search..."
+                  placeholder={getSearchPlaceholder()}
                   className="w-full bg-background border border-border rounded-lg pl-8 pr-3 py-1.5 text-xs placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
                 />
 
@@ -334,7 +362,7 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             {/* Right: Header Actions */}
-            <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0 ml-auto">
               {/* Organization Dropdown - Hidden on small screens */}
               <div className="hidden sm:block relative" ref={orgRef}>
                 <button
@@ -550,7 +578,7 @@ export function Layout({ children }: LayoutProps) {
               {/* Home */}
               {SidebarData.map((it) =>
                 it.subItems ? (
-                  <div>
+                  <div key={it.link}>
                     <button
                       onClick={() =>
                         it.link === openSubMenu
@@ -572,7 +600,10 @@ export function Layout({ children }: LayoutProps) {
                     </button>
                     {it.link === openSubMenu &&
                       it.subItems.map((subIt) => (
-                        <div className="ml-4 mt-1 space-y-1 border-l border-border/30 pl-2">
+                        <div
+                          key={subIt.link}
+                          className="ml-4 mt-1 space-y-1 border-l border-border/30 pl-2"
+                        >
                           <div className="group relative flex items-center">
                             <Link
                               to={subIt.link}
@@ -601,6 +632,7 @@ export function Layout({ children }: LayoutProps) {
                   </div>
                 ) : (
                   <Link
+                    key={it.link}
                     to={it.link}
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${

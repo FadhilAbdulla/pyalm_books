@@ -1,4 +1,4 @@
-import { Customer } from "./sales.model";
+import { Customer, Quote, Invoice, RecurringInvoice, Challan, Payment, CreditNote } from "./sales.model";
 
 export const customerList: Customer[] = [
     {
@@ -68,18 +68,6 @@ export const customerList: Customer[] = [
     },
 ];
 
-export interface Quote {
-    id: string;
-    quoteNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Draft" | "Sent" | "Accepted" | "Rejected" | "Expired";
-    issueDate: string;
-    expiryDate: string;
-    notes: string;
-}
-
 export const quoteList: Quote[] = [
     {
         id: "1",
@@ -127,19 +115,6 @@ export const quoteList: Quote[] = [
     },
 ];
 
-export interface Invoice {
-    id: string;
-    invoiceNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Draft" | "Sent" | "Paid" | "Overdue" | "Cancelled";
-    issueDate: string;
-    dueDate: string;
-    paymentTerms: string;
-    notes: string;
-}
-
 export const invoiceList: Invoice[] = [
     {
         id: "1",
@@ -178,19 +153,6 @@ export const invoiceList: Invoice[] = [
         notes: "Consulting project",
     },
 ];
-
-export interface RecurringInvoice {
-    id: string;
-    invoiceNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Active" | "Paused" | "Ended" | "Draft";
-    frequency: "Weekly" | "Monthly" | "Quarterly" | "Yearly";
-    startDate: string;
-    nextDate: string;
-    endDate: string | null;
-}
 
 export const recurringList: RecurringInvoice[] = [
     {
@@ -231,19 +193,6 @@ export const recurringList: RecurringInvoice[] = [
     },
 ];
 
-export interface Challan {
-    id: string;
-    challanNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Draft" | "Dispatched" | "Delivered" | "Cancelled";
-    issueDate: string;
-    expectedDate: string;
-    deliveryAddress: string;
-    itemCount: number;
-}
-
 export const challanList: Challan[] = [
     {
         id: "1",
@@ -283,19 +232,6 @@ export const challanList: Challan[] = [
     },
 ];
 
-export interface Payment {
-    id: string;
-    paymentNumber: string;
-    invoiceNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Completed" | "Pending" | "Failed" | "Cancelled";
-    method: "Bank Transfer" | "Credit Card" | "Cash" | "Cheque";
-    paymentDate: string;
-    referenceNumber: string;
-}
-
 export const paymentList: Payment[] = [
     {
         id: "1",
@@ -334,20 +270,6 @@ export const paymentList: Payment[] = [
         referenceNumber: "TXN-2024-003",
     },
 ];
-
-export interface CreditNote {
-    id: string;
-    creditNumber: string;
-    invoiceNumber: string;
-    customerName: string;
-    email: string;
-    amount: number;
-    status: "Draft" | "Issued" | "Applied" | "Cancelled";
-    reason: string;
-    issueDate: string;
-    appliedDate: string | null;
-    notes: string;
-}
 
 export const creditList: CreditNote[] = [
     {

@@ -11,11 +11,11 @@ import {
   ArrowUp,
 } from "lucide-react";
 import {
-  categoryOptions,
-  sortOptions,
-  TableColumns,
-  editRoutes,
-} from "@/common/data/table.data";
+  SalesCategoryOptions as categoryOptions,
+  SalesSortOptions as sortOptions,
+  SalesTableColumns as TableColumns,
+  SalesEditRoutes as editRoutes,
+} from "@/common/data/sales.data";
 import {
   getNavigationLink,
   PerPageCount,
@@ -82,7 +82,9 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
             className="rounded border border-border bg-background px-2 py-1 text-xs"
           >
             {PerPageCount.map((it) => (
-              <option value={it}>{it}</option>
+              <option key={it} value={it}>
+                {it}
+              </option>
             ))}
           </select>
         </div>
@@ -98,7 +100,10 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
             <thead className="border-b border-border bg-muted/50">
               <tr>
                 {TableColumns?.[tableKey]?.map((it) => (
-                  <th className="px-4 py-2 text-left font-semibold text-foreground">
+                  <th
+                    key={it.key}
+                    className="px-4 py-2 text-left font-semibold text-foreground"
+                  >
                     {it.sort ? (
                       <button
                         onClick={() => handleSort(it.key)}
@@ -118,9 +123,7 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                         )}
                       </button>
                     ) : (
-                      <th className="px-4 py-2 text-left font-semibold text-foreground">
-                        {it.name}
-                      </th>
+                      <span>{it.name}</span>
                     )}
                   </th>
                 ))}
