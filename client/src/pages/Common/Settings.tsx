@@ -28,7 +28,7 @@ export default function Settings() {
 
   const [profileData, setProfileData] = useState({
     fullName: "John Doe",
-    email: "john.doe@accflow.com",
+    email: "john.doe@pyalmbooks.com",
     phone: "+1 (555) 123-4567",
     timezone: "America/New_York",
     language: "en",
@@ -69,12 +69,16 @@ export default function Settings() {
     },
   ]);
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleProfileChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleOrgChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleOrgChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setOrgData((prev) => ({ ...prev, [name]: value }));
   };
@@ -683,7 +687,8 @@ export default function Settings() {
                       API Keys
                     </h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Use these keys to integrate AccFlow with your applications
+                      Use these keys to integrate Pyalm Books with your
+                      applications
                     </p>
                   </div>
                   <Button className="bg-primary text-white">

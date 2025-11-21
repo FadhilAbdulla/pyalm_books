@@ -124,27 +124,29 @@ export function Layout({ children }: LayoutProps) {
     {
       label: "New Customer",
       action: () => {
-        navigate("/customers/new");
+        navigate(RedirectionRoutes.customerNew || "/sales/customers/new");
         setQuickCreateOpen(false);
       },
     },
     {
       label: "New Quote",
       action: () => {
-        navigate("/quotes/new");
+        navigate(RedirectionRoutes.quotesNew || "/sales/quotes/new");
         setQuickCreateOpen(false);
       },
     },
     {
       label: "New Invoice",
       action: () => {
-        navigate("/invoices/new");
+        navigate(RedirectionRoutes.invoicesNew || "/sales/invoices/new");
         setQuickCreateOpen(false);
       },
     },
     {
       label: "New Expense",
       action: () => {
+        // route to purchases expense new
+        navigate(RedirectionRoutes.expensesNew || "/purchases/expenses/new");
         setQuickCreateOpen(false);
       },
     },
@@ -522,7 +524,7 @@ export function Layout({ children }: LayoutProps) {
                         John Doe
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        john@accflow.com
+                        john@pyalmbooks.com
                       </p>
                     </div>
 
@@ -573,7 +575,7 @@ export function Layout({ children }: LayoutProps) {
               sidebarOpen ? "translate-x-0" : "-translate-x-full"
             } lg:static lg:translate-x-0`}
           >
-            <nav className="flex flex-col gap-1 overflow-y-auto p-3 -mt-1.5 ">
+            <nav className="flex flex-col gap-1 overflow-y-auto p-3 mt-1.5  ">
               {/* Home */}
               {SidebarData.map((it) =>
                 it.subItems ? (
@@ -666,9 +668,7 @@ export function Layout({ children }: LayoutProps) {
 
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto bg-card">
-            <div
-              className={`ml-4 p-3${!location.pathname.includes("view") && "lg:px-6"}`}
-            >
+            <div className={`mx-4 mt-4`}>
               <div className="mx-auto max-w-7xl">{children}</div>
             </div>
           </main>

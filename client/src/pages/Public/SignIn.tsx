@@ -25,19 +25,19 @@ export default function SignIn() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="mb-4 inline-block rounded-lg bg-gradient-to-r from-primary to-accent p-3">
-            <span className="text-lg font-bold text-white">AF</span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">AccFlow</h1>
-          <p className="mt-2 text-muted-foreground">
-            Modern Accounting Platform
-          </p>
-        </div>
 
         {/* Sign In Card */}
         <div className="rounded-lg border border-border bg-card p-8 shadow-lg">
-          <h2 className="mb-2 text-2xl font-bold text-foreground">
+          <div className="text-start">
+            <div className="inline-block mb-4">
+              <img
+                src="/logo.png"
+                alt="Pyalm Books"
+                className="h-8 w-auto mx-auto"
+              />
+            </div>
+          </div>
+          <h2 className="mt-2 mb-2 text-2xl font-bold text-foreground">
             Welcome Back
           </h2>
           <p className="mb-8 text-muted-foreground">
@@ -150,18 +150,10 @@ export default function SignIn() {
 
           {/* SSO Options */}
           <div className="space-y-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              disabled
-            >
+            <Button variant="outline" className="w-full" disabled>
               Continue with Google
             </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-              disabled
-            >
+            <Button variant="outline" className="w-full" disabled>
               Continue with Microsoft
             </Button>
           </div>
@@ -176,13 +168,6 @@ export default function SignIn() {
               Sign up here
             </Link>
           </p>
-        </div>
-
-        {/* Demo Credentials */}
-        <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-          <p className="font-medium text-foreground mb-2">Demo Credentials:</p>
-          <p>Email: <span className="font-mono text-primary">demo@accflow.com</span></p>
-          <p>Password: <span className="font-mono text-primary">demo123</span></p>
         </div>
       </div>
     </div>

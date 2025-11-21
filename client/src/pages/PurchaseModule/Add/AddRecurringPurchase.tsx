@@ -25,7 +25,10 @@ export default function AddRecurringPurchase() {
 
   return (
     <Layout>
-      <div className="w-full flex flex-col gap-0 pt-4" style={{ height: "calc(100vh - 55px )" }}>
+      <div
+        className="w-full flex flex-col gap-0 pt-4"
+        style={{ height: "calc(100vh - 55px )" }}
+      >
         <div className="flex-1 overflow-y-auto mb-4">
           <Card className="p-6 max-w-3xl">
             <div className="border-b border-border pb-4 mb-3">
@@ -38,18 +41,52 @@ export default function AddRecurringPurchase() {
                   <ArrowLeft size={20} className="text-foreground" />
                 </button>
                 <div>
-                  <h1 className="text-lg font-semibold text-foreground">{id ? "Edit" : "New"} Recurring Purchase</h1>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{id ? "Update recurring purchase" : "Create a new recurring purchase"}</p>
+                  <h1 className="text-lg font-semibold text-foreground">
+                    {id ? "Edit" : "New"} Recurring Purchase
+                  </h1>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {id
+                      ? "Update recurring purchase"
+                      : "Create a new recurring purchase"}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <form id="recurring-purchase-form" onSubmit={onSave} className="space-y-6">
+            <form
+              id="recurring-purchase-form"
+              onSubmit={onSave}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 gap-3">
-                <Input placeholder="Reference #" value={reference} onChange={(e) => setReference((e.target as HTMLInputElement).value)} />
-                <Input placeholder="Vendor" value={vendor} onChange={(e) => setVendor((e.target as HTMLInputElement).value)} />
-                <Input placeholder="Frequency" value={frequency} onChange={(e) => setFrequency((e.target as HTMLInputElement).value)} />
-                <Input placeholder="Notes" value={notes} onChange={(e) => setNotes((e.target as HTMLInputElement).value)} />
+                <Input
+                  placeholder="Reference #"
+                  value={reference}
+                  onChange={(e) =>
+                    setReference((e.target as HTMLInputElement).value)
+                  }
+                />
+                <Input
+                  placeholder="Vendor"
+                  value={vendor}
+                  onChange={(e) =>
+                    setVendor((e.target as HTMLInputElement).value)
+                  }
+                />
+                <Input
+                  placeholder="Frequency"
+                  value={frequency}
+                  onChange={(e) =>
+                    setFrequency((e.target as HTMLInputElement).value)
+                  }
+                />
+                <Input
+                  placeholder="Notes"
+                  value={notes}
+                  onChange={(e) =>
+                    setNotes((e.target as HTMLInputElement).value)
+                  }
+                />
               </div>
             </form>
           </Card>
@@ -58,8 +95,20 @@ export default function AddRecurringPurchase() {
         <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0">
           <div className="mx-auto w-full flex items-center justify-start">
             <div className="flex gap-3">
-              <Button type="submit" form="recurring-purchase-form" className="bg-primary text-white">{id ? "Update" : "Create"}</Button>
-              <Button type="button" onClick={() => navigate(RedirectionRoutes.recurring)} variant="outline">Cancel</Button>
+              <Button
+                type="submit"
+                form="recurring-purchase-form"
+                className="bg-primary text-white"
+              >
+                {id ? "Update" : "Create"}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => navigate(RedirectionRoutes.recurring)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
             </div>
           </div>
         </div>
@@ -67,4 +116,3 @@ export default function AddRecurringPurchase() {
     </Layout>
   );
 }
-

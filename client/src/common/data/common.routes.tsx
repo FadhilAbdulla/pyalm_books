@@ -2,7 +2,8 @@ import Banking from "@/pages/Common/Banking";
 import Dashboard from "@/pages/Common/Dashboard";
 import Organization from "@/pages/Common/Organization";
 import UIComponents from "@/pages/Common/UIComponents";
-import Reports from "@/pages/Common/Reports";
+// Use the simplified Reports page (centered search + category list) for the /reports route
+import Reports from "@/pages/Reports";
 import Settings from "@/pages/Common/Settings";
 import Subscription from "@/pages/Common/Subscription";
 

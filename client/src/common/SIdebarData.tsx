@@ -196,11 +196,11 @@ export const SidebarData: MainItem[] = [
       },
     ],
   },
-  {
-    name: "Time Tracking",
-    link: "test",
-    icon: Clock,
-  },
+  // {
+  //   name: "Time Tracking",
+  //   link: "test",
+  //   icon: Clock,
+  // },
   {
     name: "Banking",
     link: RedirectionRoutes.banking,

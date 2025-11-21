@@ -1,5 +1,6 @@
 import Purchases from "../pages/Purchases";
 import Inventory from "../pages/Inventory";
+import Reports from "../pages/Reports";
 import { RedirectionRoutes } from "./RedirectionRoutes";
 import { SalesElement } from "./data/sales.routes";
 import { PurchaseElement } from "./data/purchase.routes";
@@ -19,6 +20,10 @@ export const PrivateRoutes: RoutesElement[] = [
   {
     path: RedirectionRoutes.purchase,
     element: <Purchases />,
+  },
+  {
+    path: "/reports",
+    element: <Reports />,
   },
   {
     path: RedirectionRoutes.inventory,

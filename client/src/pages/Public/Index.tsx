@@ -64,13 +64,13 @@ export default function Index() {
       <nav className="sticky top-0 z-50 border-b border-border/30 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-primary to-accent">
-              <span className="text-sm font-bold text-white">AF</span>
-            </div>
-            <span className="text-lg font-bold text-foreground">AccFlow</span>
+            <img src="/logo.png" alt="Pyalm Books" className="h-8 w-auto" />
           </Link>
           <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="font-medium text-foreground hover:text-primary transition-colors">
+            <Link
+              to="/dashboard"
+              className="font-medium text-foreground hover:text-primary transition-colors"
+            >
               Dashboard
             </Link>
             <Link
@@ -93,28 +93,29 @@ export default function Index() {
           </div>
 
           <h1 className="text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
-            Cloud-Based Accounting
-            <span className="text-gradient"> Made Simple</span>
+            <span className="text-gradient">
+              {" "}
+              Pyalm Books — Cloud Accounting Made Simple
+            </span>
           </h1>
 
           <p className="mt-6 text-lg text-muted-foreground">
-            AccFlow brings enterprise-grade accounting features with modern UX
-            design. Manage invoices, expenses, inventory, and financial reports
-            all in one intuitive platform.
+            Pyalm Books brings enterprise-grade accounting features with modern
+            UX design. Manage invoices, expenses, inventory, and financial
+            reports all in one intuitive platform.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link to="/dashboard">
-              <Button size="lg" className="w-full sm:w-auto bg-primary text-white hover:shadow-lg hover:shadow-primary/50">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto bg-primary text-white hover:shadow-lg hover:shadow-primary/50"
+              >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
+            <Button size="lg" variant="outline" className="w-full sm:w-auto">
               Watch Demo
             </Button>
           </div>
@@ -199,7 +200,7 @@ export default function Index() {
             Ready to Simplify Your Accounting?
           </h2>
           <p className="mb-10 text-lg text-muted-foreground">
-            Join thousands of businesses using AccFlow for smarter financial
+            Join thousands of businesses using Pyalm Books for smarter financial
             management.
           </p>
           <Link to="/dashboard">
@@ -220,10 +221,7 @@ export default function Index() {
           <div className="grid gap-8 md:grid-cols-4">
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-primary to-accent">
-                  <span className="text-sm font-bold text-white">AF</span>
-                </div>
-                <span className="font-bold text-foreground">AccFlow</span>
+                <img src="/logo.png" alt="Pyalm Books" className="h-8 w-auto" />
               </div>
               <p className="text-sm text-muted-foreground">
                 Modern accounting platform for the digital age
@@ -232,30 +230,48 @@ export default function Index() {
             <div>
               <h3 className="mb-4 font-semibold text-foreground">Product</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="hover:text-foreground cursor-pointer transition-colors">Features</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Pricing</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Security</li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Features
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Pricing
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Security
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="mb-4 font-semibold text-foreground">Company</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="hover:text-foreground cursor-pointer transition-colors">About</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Blog</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Contact</li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  About
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Blog
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Contact
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="mb-4 font-semibold text-foreground">Legal</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="hover:text-foreground cursor-pointer transition-colors">Privacy</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Terms</li>
-                <li className="hover:text-foreground cursor-pointer transition-colors">Cookies</li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Privacy
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Terms
+                </li>
+                <li className="hover:text-foreground cursor-pointer transition-colors">
+                  Cookies
+                </li>
               </ul>
             </div>
           </div>
           <div className="mt-8 border-t border-border/30 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 AccFlow. All rights reserved.</p>
+            <p>&copy; 2024 Pyalm Books. All rights reserved.</p>
           </div>
         </div>
       </footer>

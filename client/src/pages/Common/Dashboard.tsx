@@ -146,7 +146,7 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+            <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
             <p className="mt-1 text-muted-foreground">
               Welcome back! Here's your financial overview for June 2024
             </p>
@@ -171,7 +171,7 @@ export default function Dashboard() {
                     <p className="text-sm font-medium text-muted-foreground">
                       {metric.label}
                     </p>
-                    <p className="mt-2 text-2xl font-bold text-foreground">
+                    <p className="mt-2 text-xl font-bold text-foreground">
                       {metric.value}
                     </p>
                     <p

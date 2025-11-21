@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Mail, Lock, User, Building2, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  Building2,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -56,12 +65,14 @@ export default function SignUp() {
             Account Created!
           </h2>
           <p className="mb-6 text-muted-foreground">
-            Your AccFlow account has been created successfully. You'll be
+            Your Pyalm Books account has been created successfully. You'll be
             redirected to the dashboard shortly.
           </p>
           <div className="inline-flex items-center gap-2">
             <span className="inline-block h-2 w-2 rounded-full bg-primary animate-pulse"></span>
-            <span className="text-sm text-muted-foreground">Redirecting...</span>
+            <span className="text-sm text-muted-foreground">
+              Redirecting...
+            </span>
           </div>
         </div>
       </div>
@@ -71,24 +82,22 @@ export default function SignUp() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 px-4 py-8">
       <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="mb-4 inline-block rounded-lg bg-gradient-to-r from-primary to-accent p-3">
-            <span className="text-lg font-bold text-white">AF</span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">AccFlow</h1>
-          <p className="mt-2 text-muted-foreground">
-            Modern Accounting Platform
-          </p>
-        </div>
-
         {/* Sign Up Card */}
         <div className="rounded-lg border border-border bg-card p-8 shadow-lg">
+          <div className="text-start">
+            <div className="mb-4 inline-block">
+              <img
+                src="/logo.png"
+                alt="Pyalm Books"
+                className="h-8 w-auto mx-auto"
+              />
+            </div>
+          </div>
           <h2 className="mb-2 text-2xl font-bold text-foreground">
             Create Account
           </h2>
           <p className="mb-8 text-muted-foreground">
-            Join thousands of businesses using AccFlow
+            Join thousands of businesses using Pyalm Books
           </p>
 
           {/* Sign Up Form */}
@@ -113,7 +122,7 @@ export default function SignUp() {
             </div>
 
             {/* Company Name Input */}
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-foreground">
                 Company Name
               </label>
@@ -129,7 +138,7 @@ export default function SignUp() {
                   className="w-full rounded-lg border border-border bg-background py-2 pl-10 pr-4 text-foreground placeholder-muted-foreground transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Email Input */}
             <div>
@@ -219,7 +228,10 @@ export default function SignUp() {
                 onChange={(e) => setAgreeTerms(e.target.checked)}
                 className="mt-1 h-4 w-4 rounded border-border bg-background text-primary focus:ring-2 focus:ring-primary/20"
               />
-              <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
+              <label
+                htmlFor="terms"
+                className="text-sm text-muted-foreground cursor-pointer"
+              >
                 I agree to the{" "}
                 <a href="#" className="text-primary hover:underline">
                   Terms of Service
@@ -264,7 +276,7 @@ export default function SignUp() {
         </div>
 
         {/* Features */}
-        <div className="mt-6 grid gap-3 text-center text-sm">
+        {/* <div className="mt-6 grid gap-3 text-center text-sm">
           <div className="flex items-center justify-center gap-2 text-muted-foreground">
             <CheckCircle2 className="h-4 w-4 text-accent" />
             <span>30-day free trial, no credit card required</span>
@@ -277,7 +289,7 @@ export default function SignUp() {
             <CheckCircle2 className="h-4 w-4 text-accent" />
             <span>Cancel anytime</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

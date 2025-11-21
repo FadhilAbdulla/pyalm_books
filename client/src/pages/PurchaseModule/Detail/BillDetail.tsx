@@ -88,9 +88,7 @@ export default function BillDetail() {
                   <Mail size={16} />
                 </button>
                 <button
-                  onClick={() =>
-                    navigate(`/purchases/bills/${currentBill.id}`)
-                  }
+                  onClick={() => navigate(`/purchases/bills/${currentBill.id}`)}
                   className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                   title="Edit"
                 >
@@ -163,7 +161,10 @@ export default function BillDetail() {
                         </thead>
                         <tbody>
                           {displayItems.map((item, idx) => (
-                            <tr key={idx} className="border-b border-foreground/10">
+                            <tr
+                              key={idx}
+                              className="border-b border-foreground/10"
+                            >
                               <td className="py-3 text-foreground">
                                 {item.description}
                               </td>
@@ -174,9 +175,7 @@ export default function BillDetail() {
                                 ${item.unitPrice.toFixed(2)}
                               </td>
                               <td className="text-right font-medium text-foreground">
-                                ${(
-                                  item.quantity * item.unitPrice
-                                ).toFixed(2)}
+                                ${(item.quantity * item.unitPrice).toFixed(2)}
                               </td>
                             </tr>
                           ))}
@@ -189,7 +188,9 @@ export default function BillDetail() {
                   <div className="flex justify-end">
                     <div className="w-48">
                       <div className="flex justify-between py-2 border-t-2 border-foreground/20">
-                        <span className="font-bold text-foreground">Total:</span>
+                        <span className="font-bold text-foreground">
+                          Total:
+                        </span>
                         <span className="font-bold text-foreground">
                           ${currentBill.amount.toLocaleString()}
                         </span>
@@ -200,8 +201,12 @@ export default function BillDetail() {
                   {/* Notes */}
                   {currentBill.notes && (
                     <div className="pt-4 border-t border-foreground/10">
-                      <p className="text-xs text-muted-foreground mb-1">Notes:</p>
-                      <p className="text-sm text-foreground">{currentBill.notes}</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Notes:
+                      </p>
+                      <p className="text-sm text-foreground">
+                        {currentBill.notes}
+                      </p>
                     </div>
                   )}
                 </div>
