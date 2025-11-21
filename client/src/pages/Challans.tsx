@@ -6,22 +6,24 @@ import { FormModal } from "@/components/FormModal";
 import { Plus } from "lucide-react";
 import DataTable from "@/components/ui/dataTable";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { invoiceList, Invoice } from "@/common/data/demo";
+import { challanList, Challan } from "@/common/data/demo";
 
-export default function Invoices() {
+export default function Challans() {
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState<Invoice[]>(invoiceList);
+  const [challans, setChallans] = useState<Challan[]>(challanList);
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "create" | "edit" | "view" | "delete";
-    invoice?: Invoice;
+    challan?: Challan;
   }>({ isOpen: false, mode: "create" });
 
-  const handleDeleteInvoice = async () => {
+  const handleDeleteChallan = async () => {
     await new Promise((resolve) => setTimeout(resolve, 800));
-    if (modalState.invoice) {
-      setInvoices(invoices.filter((inv) => inv.id !== modalState.invoice!.id));
+    if (modalState.challan) {
+      setChallans(
+        challans.filter((ch) => ch.id !== modalState.challan!.id)
+      );
     }
     setModalState({ isOpen: false, mode: "create" });
   };
@@ -32,23 +34,23 @@ export default function Invoices() {
         {/* Header */}
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-lg font-bold text-foreground">Invoices</h1>
+            <h1 className="text-lg font-bold text-foreground">Challans</h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Create, send, and manage your invoices
+              Create and track delivery notes
             </p>
           </div>
           <Button
-            onClick={() => navigate(RedirectionRoutes.invoicesNew)}
+            onClick={() => navigate(RedirectionRoutes.challansNew)}
             className="bg-primary text-white text-xs"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Invoice
+            Add Challan
           </Button>
         </div>
 
         <DataTable
-          dataSource={invoices}
-          tableKey={"invoice"}
+          dataSource={challans}
+          tableKey={"challan"}
           totalPages={1}
         />
       </div>
@@ -56,16 +58,16 @@ export default function Invoices() {
       {/* Delete Confirmation Modal */}
       <FormModal
         isOpen={modalState.isOpen && modalState.mode === "delete"}
-        title="Delete Invoice"
+        title="Delete Challan"
         fields={[
           {
             id: "confirmation",
-            label: `Are you sure you want to delete invoice "${modalState.invoice?.invoiceNumber}"? This action cannot be undone.`,
+            label: `Are you sure you want to delete challan "${modalState.challan?.challanNumber}"? This action cannot be undone.`,
             type: "text",
           },
         ]}
         onSubmit={async () => {}}
-        onConfirm={handleDeleteInvoice}
+        onConfirm={handleDeleteChallan}
         onClose={() => setModalState({ isOpen: false, mode: "create" })}
         mode="view"
       />

@@ -14,6 +14,7 @@ import {
   categoryOptions,
   sortOptions,
   TableColumns,
+  editRoutes,
 } from "@/common/data/table.data";
 import {
   getNavigationLink,
@@ -168,7 +169,12 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                   <td className="px-4 py-2">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
-                        onClick={() => navigate(`/customers/${"it.key"}`)}
+                        onClick={() => {
+                          const editRoute = editRoutes[tableKey];
+                          if (editRoute) {
+                            navigate(getNavigationLink(editRoute, record.id));
+                          }
+                        }}
                         className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                         title="Edit"
                       >

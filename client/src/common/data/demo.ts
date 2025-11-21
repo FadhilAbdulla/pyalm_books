@@ -67,3 +67,326 @@ export const customerList: Customer[] = [
         opening_balance: 12000,
     },
 ];
+
+export interface Quote {
+    id: string;
+    quoteNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Draft" | "Sent" | "Accepted" | "Rejected" | "Expired";
+    issueDate: string;
+    expiryDate: string;
+    notes: string;
+}
+
+export const quoteList: Quote[] = [
+    {
+        id: "1",
+        quoteNumber: "QT-2024-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 25000,
+        status: "Sent",
+        issueDate: "2024-06-20",
+        expiryDate: "2024-07-20",
+        notes: "Enterprise software package",
+    },
+    {
+        id: "2",
+        quoteNumber: "QT-2024-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 12500,
+        status: "Accepted",
+        issueDate: "2024-06-15",
+        expiryDate: "2024-07-15",
+        notes: "Consulting services",
+    },
+    {
+        id: "3",
+        quoteNumber: "QT-2024-003",
+        customerName: "Digital Ventures",
+        email: "finance@digitalventures.com",
+        amount: 8750,
+        status: "Draft",
+        issueDate: "2024-06-25",
+        expiryDate: "2024-07-25",
+        notes: "Web development project",
+    },
+    {
+        id: "4",
+        quoteNumber: "QT-2024-004",
+        customerName: "Global Industries Ltd",
+        email: "accounts@globalind.com",
+        amount: 45000,
+        status: "Sent",
+        issueDate: "2024-06-10",
+        expiryDate: "2024-07-10",
+        notes: "Infrastructure upgrade",
+    },
+];
+
+export interface Invoice {
+    id: string;
+    invoiceNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Draft" | "Sent" | "Paid" | "Overdue" | "Cancelled";
+    issueDate: string;
+    dueDate: string;
+    paymentTerms: string;
+    notes: string;
+}
+
+export const invoiceList: Invoice[] = [
+    {
+        id: "1",
+        invoiceNumber: "INV-2024-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 5000,
+        status: "Paid",
+        issueDate: "2024-06-28",
+        dueDate: "2024-07-28",
+        paymentTerms: "Net 30",
+        notes: "Professional services",
+    },
+    {
+        id: "2",
+        invoiceNumber: "INV-2024-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 3200,
+        status: "Sent",
+        issueDate: "2024-06-25",
+        dueDate: "2024-07-25",
+        paymentTerms: "Net 30",
+        notes: "Software license",
+    },
+    {
+        id: "3",
+        invoiceNumber: "INV-2024-003",
+        customerName: "Global Industries Ltd",
+        email: "accounts@globalind.com",
+        amount: 8500,
+        status: "Overdue",
+        issueDate: "2024-06-15",
+        dueDate: "2024-07-15",
+        paymentTerms: "Net 30",
+        notes: "Consulting project",
+    },
+];
+
+export interface RecurringInvoice {
+    id: string;
+    invoiceNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Active" | "Paused" | "Ended" | "Draft";
+    frequency: "Weekly" | "Monthly" | "Quarterly" | "Yearly";
+    startDate: string;
+    nextDate: string;
+    endDate: string | null;
+}
+
+export const recurringList: RecurringInvoice[] = [
+    {
+        id: "1",
+        invoiceNumber: "REC-INV-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 2000,
+        status: "Active",
+        frequency: "Monthly",
+        startDate: "2024-01-15",
+        nextDate: "2024-07-15",
+        endDate: null,
+    },
+    {
+        id: "2",
+        invoiceNumber: "REC-INV-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 1500,
+        status: "Active",
+        frequency: "Quarterly",
+        startDate: "2024-03-01",
+        nextDate: "2024-09-01",
+        endDate: null,
+    },
+    {
+        id: "3",
+        invoiceNumber: "REC-INV-003",
+        customerName: "Creative Agency Ltd",
+        email: "accounts@creative.com",
+        amount: 3000,
+        status: "Paused",
+        frequency: "Monthly",
+        startDate: "2024-02-15",
+        nextDate: "2024-08-15",
+        endDate: null,
+    },
+];
+
+export interface Challan {
+    id: string;
+    challanNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Draft" | "Dispatched" | "Delivered" | "Cancelled";
+    issueDate: string;
+    expectedDate: string;
+    deliveryAddress: string;
+    itemCount: number;
+}
+
+export const challanList: Challan[] = [
+    {
+        id: "1",
+        challanNumber: "CH-2024-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 12000,
+        status: "Delivered",
+        issueDate: "2024-06-20",
+        expectedDate: "2024-06-25",
+        deliveryAddress: "123 Business St, NY 10001",
+        itemCount: 5,
+    },
+    {
+        id: "2",
+        challanNumber: "CH-2024-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 8500,
+        status: "Dispatched",
+        issueDate: "2024-06-28",
+        expectedDate: "2024-07-02",
+        deliveryAddress: "456 Tech Ave, CA 94000",
+        itemCount: 3,
+    },
+    {
+        id: "3",
+        challanNumber: "CH-2024-003",
+        customerName: "Global Industries Ltd",
+        email: "accounts@globalind.com",
+        amount: 15000,
+        status: "Draft",
+        issueDate: "2024-06-25",
+        expectedDate: "2024-07-01",
+        deliveryAddress: "789 Industrial Blvd, TX 75001",
+        itemCount: 8,
+    },
+];
+
+export interface Payment {
+    id: string;
+    paymentNumber: string;
+    invoiceNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Completed" | "Pending" | "Failed" | "Cancelled";
+    method: "Bank Transfer" | "Credit Card" | "Cash" | "Cheque";
+    paymentDate: string;
+    referenceNumber: string;
+}
+
+export const paymentList: Payment[] = [
+    {
+        id: "1",
+        paymentNumber: "PAY-2024-001",
+        invoiceNumber: "INV-2024-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 5000,
+        status: "Completed",
+        method: "Bank Transfer",
+        paymentDate: "2024-06-30",
+        referenceNumber: "TXN-2024-001",
+    },
+    {
+        id: "2",
+        paymentNumber: "PAY-2024-002",
+        invoiceNumber: "INV-2024-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 3200,
+        status: "Pending",
+        method: "Credit Card",
+        paymentDate: "2024-07-02",
+        referenceNumber: "TXN-2024-002",
+    },
+    {
+        id: "3",
+        paymentNumber: "PAY-2024-003",
+        invoiceNumber: "INV-2024-003",
+        customerName: "Global Industries Ltd",
+        email: "accounts@globalind.com",
+        amount: 8500,
+        status: "Completed",
+        method: "Bank Transfer",
+        paymentDate: "2024-07-05",
+        referenceNumber: "TXN-2024-003",
+    },
+];
+
+export interface CreditNote {
+    id: string;
+    creditNumber: string;
+    invoiceNumber: string;
+    customerName: string;
+    email: string;
+    amount: number;
+    status: "Draft" | "Issued" | "Applied" | "Cancelled";
+    reason: string;
+    issueDate: string;
+    appliedDate: string | null;
+    notes: string;
+}
+
+export const creditList: CreditNote[] = [
+    {
+        id: "1",
+        creditNumber: "CR-2024-001",
+        invoiceNumber: "INV-2024-001",
+        customerName: "Acme Corporation",
+        email: "contact@acmecorp.com",
+        amount: 500,
+        status: "Applied",
+        reason: "Quality issue",
+        issueDate: "2024-06-28",
+        appliedDate: "2024-06-30",
+        notes: "Partial refund for defective items",
+    },
+    {
+        id: "2",
+        creditNumber: "CR-2024-002",
+        invoiceNumber: "INV-2024-002",
+        customerName: "Tech Solutions Inc",
+        email: "billing@techsolutions.com",
+        amount: 320,
+        status: "Issued",
+        reason: "Early payment discount",
+        issueDate: "2024-06-25",
+        appliedDate: null,
+        notes: "5% early payment discount",
+    },
+    {
+        id: "3",
+        creditNumber: "CR-2024-003",
+        invoiceNumber: "INV-2024-003",
+        customerName: "Global Industries Ltd",
+        email: "accounts@globalind.com",
+        amount: 1000,
+        status: "Applied",
+        reason: "Bulk discount",
+        issueDate: "2024-06-20",
+        appliedDate: "2024-06-25",
+        notes: "10% bulk purchase discount",
+    },
+];

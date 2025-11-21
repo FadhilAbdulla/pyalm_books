@@ -5,34 +5,35 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { Invoice } from "@/common/data/demo";
-import { invoiceList } from "@/common/data/demo";
+import { Payment } from "@/common/data/demo";
+import { paymentList } from "@/common/data/demo";
 
-const STATUSES = ["Draft", "Sent", "Paid", "Overdue", "Cancelled"];
+const STATUSES = ["Completed", "Pending", "Failed", "Cancelled"];
+const PAYMENT_METHODS = ["Bank Transfer", "Credit Card", "Cash", "Cheque"];
 
-export default function AddInvoice() {
+export default function AddPayment() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<Partial<Invoice>>({
+  const [formData, setFormData] = useState<Partial<Payment>>({
+    paymentNumber: "",
     invoiceNumber: "",
     customerName: "",
     email: "",
     amount: 0,
-    status: "Draft",
-    issueDate: "",
-    dueDate: "",
-    paymentTerms: "Net 30",
-    notes: "",
+    status: "Pending",
+    method: "Bank Transfer",
+    paymentDate: "",
+    referenceNumber: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (isEditing && id) {
-      const invoice = invoiceList.find((i) => i.id === id);
-      if (invoice) {
-        setFormData(invoice);
+      const payment = paymentList.find((p) => p.id === id);
+      if (payment) {
+        setFormData(payment);
       }
     }
   }, [id, isEditing]);
@@ -40,6 +41,9 @@ export default function AddInvoice() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.paymentNumber || formData.paymentNumber.trim().length < 2) {
+      newErrors.paymentNumber = "Payment number is required";
+    }
     if (!formData.invoiceNumber || formData.invoiceNumber.trim().length < 2) {
       newErrors.invoiceNumber = "Invoice number is required";
     }
@@ -49,11 +53,8 @@ export default function AddInvoice() {
     if (!formData.amount || formData.amount <= 0) {
       newErrors.amount = "Amount must be greater than 0";
     }
-    if (!formData.issueDate) {
-      newErrors.issueDate = "Issue date is required";
-    }
-    if (!formData.dueDate) {
-      newErrors.dueDate = "Due date is required";
+    if (!formData.paymentDate) {
+      newErrors.paymentDate = "Payment date is required";
     }
 
     setErrors(newErrors);
@@ -67,7 +68,7 @@ export default function AddInvoice() {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
-    navigate(RedirectionRoutes.invoices);
+    navigate(RedirectionRoutes.payments);
   };
 
   const handleChange = (
@@ -89,7 +90,7 @@ export default function AddInvoice() {
       <div className="border-b border-border pb-4 mb-3">
         <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate(RedirectionRoutes.invoices)}
+              onClick={() => navigate(RedirectionRoutes.payments)}
               className="p-1 rounded-lg hover:bg-muted transition-colors"
               title="Back"
             >
@@ -97,10 +98,10 @@ export default function AddInvoice() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-foreground">
-                {isEditing ? "Edit Invoice" : "Add Invoice"}
+                {isEditing ? "Edit Payment" : "Add Payment"}
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing ? "Update invoice details" : "Create a new invoice"}
+                {isEditing ? "Update payment details" : "Record a new payment"}
               </p>
             </div>
                   </div>
@@ -111,9 +112,30 @@ export default function AddInvoice() {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <Card className="p-6 max-w-3xl">
-            <form id="invoice-form" className="space-y-6">
-              {/* Invoice Number and Status */}
+            <form id="payment-form" className="space-y-6">
+              {/* Payment Number and Invoice Number */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Payment Number <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="paymentNumber"
+                    value={formData.paymentNumber || ""}
+                    onChange={handleChange}
+                    placeholder="PAY-2024-001"
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.paymentNumber
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
+                  />
+                  {errors.paymentNumber && (
+                    <p className="text-xs text-destructive mt-1">{errors.paymentNumber}</p>
+                  )}
+                </div>
+
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
                     Invoice Number <span className="text-destructive">*</span>
@@ -133,24 +155,6 @@ export default function AddInvoice() {
                   {errors.invoiceNumber && (
                     <p className="text-xs text-destructive mt-1">{errors.invoiceNumber}</p>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-2">
-                    Status
-                  </label>
-                  <select
-                    name="status"
-                    value={formData.status || "Draft"}
-                    onChange={handleChange}
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                  >
-                    {STATUSES.map((status) => (
-                      <option key={status} value={status}>
-                        {status}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
 
@@ -192,7 +196,7 @@ export default function AddInvoice() {
                 </div>
               </div>
 
-              {/* Amount and Issue Date */}
+              {/* Amount and Status */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
@@ -217,73 +221,75 @@ export default function AddInvoice() {
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Issue Date <span className="text-destructive">*</span>
+                    Status
                   </label>
-                  <input
-                    type="date"
-                    name="issueDate"
-                    value={formData.issueDate || ""}
+                  <select
+                    name="status"
+                    value={formData.status || "Pending"}
                     onChange={handleChange}
-                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.issueDate
-                        ? "border-destructive bg-destructive/5 focus:border-destructive"
-                        : "border-border bg-background focus:border-primary"
-                    }`}
-                  />
-                  {errors.issueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.issueDate}</p>
-                  )}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  >
+                    {STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              {/* Due Date and Payment Terms */}
+              {/* Payment Method and Payment Date */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Due Date <span className="text-destructive">*</span>
+                    Payment Method
                   </label>
-                  <input
-                    type="date"
-                    name="dueDate"
-                    value={formData.dueDate || ""}
+                  <select
+                    name="method"
+                    value={formData.method || "Bank Transfer"}
                     onChange={handleChange}
-                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.dueDate
-                        ? "border-destructive bg-destructive/5 focus:border-destructive"
-                        : "border-border bg-background focus:border-primary"
-                    }`}
-                  />
-                  {errors.dueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.dueDate}</p>
-                  )}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  >
+                    {PAYMENT_METHODS.map((method) => (
+                      <option key={method} value={method}>
+                        {method}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Payment Terms
+                    Payment Date <span className="text-destructive">*</span>
                   </label>
                   <input
-                    type="text"
-                    name="paymentTerms"
-                    value={formData.paymentTerms || ""}
+                    type="date"
+                    name="paymentDate"
+                    value={formData.paymentDate || ""}
                     onChange={handleChange}
-                    placeholder="Net 30"
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.paymentDate
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
                   />
+                  {errors.paymentDate && (
+                    <p className="text-xs text-destructive mt-1">{errors.paymentDate}</p>
+                  )}
                 </div>
               </div>
 
-              {/* Notes */}
+              {/* Reference Number */}
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  Notes
+                  Reference Number
                 </label>
-                <textarea
-                  name="notes"
-                  value={formData.notes || ""}
+                <input
+                  type="text"
+                  name="referenceNumber"
+                  value={formData.referenceNumber || ""}
                   onChange={handleChange}
-                  placeholder="Add additional notes"
-                  rows={4}
+                  placeholder="e.g., Bank transaction ID, cheque number"
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 />
               </div>
@@ -296,16 +302,16 @@ export default function AddInvoice() {
           <div className="flex gap-3 max-w-3xl">
             <Button
               type="submit"
-              form="invoice-form"
+              form="payment-form"
               disabled={isLoading}
               onClick={handleSubmit}
               className="bg-primary text-white text-sm"
             >
-              {isLoading ? "Saving..." : isEditing ? "Update Invoice" : "Add Invoice"}
+              {isLoading ? "Saving..." : isEditing ? "Update Payment" : "Add Payment"}
             </Button>
             <Button
               type="button"
-              onClick={() => navigate(RedirectionRoutes.invoices)}
+              onClick={() => navigate(RedirectionRoutes.payments)}
               variant="outline"
               className="text-sm"
             >

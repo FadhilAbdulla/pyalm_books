@@ -19,6 +19,14 @@ import UIComponents from "../pages/UIComponents";
 import Organization from "../pages/Organization";
 import Invoices from "../pages/Invoices";
 import AddInvoice from "../pages/AddInvoice";
+import Recurring from "../pages/Recurring";
+import AddRecurring from "../pages/AddRecurring";
+import Challans from "../pages/Challans";
+import AddChallan from "../pages/AddChallan";
+import Payments from "../pages/Payments";
+import AddPayment from "../pages/AddPayment";
+import Credits from "../pages/Credits";
+import AddCredit from "../pages/AddCredit";
 import { RedirectionRoutes } from "./RedirectionRoutes";
 
 interface Routes {
@@ -119,8 +127,52 @@ export const PrivateRoutes: Routes[] = [
     element: <AddInvoice />,
   },
   {
-    path: RedirectionRoutes.subscription,
-    element: <Subscription />,
+    path: RedirectionRoutes.recurring,
+    element: <Recurring />,
+  },
+  {
+    path: RedirectionRoutes.recurringNew,
+    element: <AddRecurring />,
+  },
+  {
+    path: RedirectionRoutes.recurringEdit,
+    element: <AddRecurring />,
+  },
+  {
+    path: RedirectionRoutes.challans,
+    element: <Challans />,
+  },
+  {
+    path: RedirectionRoutes.challansNew,
+    element: <AddChallan />,
+  },
+  {
+    path: RedirectionRoutes.challansEdit,
+    element: <AddChallan />,
+  },
+  {
+    path: RedirectionRoutes.payments,
+    element: <Payments />,
+  },
+  {
+    path: RedirectionRoutes.paymentsNew,
+    element: <AddPayment />,
+  },
+  {
+    path: RedirectionRoutes.paymentsEdit,
+    element: <AddPayment />,
+  },
+  {
+    path: RedirectionRoutes.credits,
+    element: <Credits />,
+  },
+  {
+    path: RedirectionRoutes.creditsNew,
+    element: <AddCredit />,
+  },
+  {
+    path: RedirectionRoutes.creditsEdit,
+    element: <AddCredit />,
   },
   {
     path: RedirectionRoutes.organization,

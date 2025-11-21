@@ -5,69 +5,62 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
+import { Customer } from "@/common/data/sales.model";
+import { customerList } from "@/common/data/demo";
+
+const SALUTATIONS = ["Mr.", "Ms.", "Mrs.", "Dr.", "Prof."];
+const LANGUAGES = ["English", "Arabic", "Spanish", "French"];
+const CURRENCIES = ["USD", "AED", "GBP", "INR", "EUR"];
 
 export default function AddCustomer() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
+  const [formData, setFormData] = useState<Partial<Customer>>({
+    id: "",
+    first_name: "",
+    last_name: "",
+    salutation: "Mr.",
+    company_name: "",
     email: "",
     phone: "",
-    city: "",
-    status: "Active",
+    language: "English",
+    currency: "USD",
+    account_recievable: "0",
+    opening_balance: 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Simulate loading customer data for edit mode
   useEffect(() => {
-    if (isEditing) {
-      // In a real app, fetch the customer data
-      const mockCustomers: Record<string, any> = {
-        "1": {
-          name: "Acme Corporation",
-          email: "contact@acmecorp.com",
-          phone: "+1-555-0101",
-          city: "New York",
-          status: "Active",
-        },
-        "2": {
-          name: "Tech Solutions Inc",
-          email: "billing@techsolutions.com",
-          phone: "+1-555-0102",
-          city: "San Francisco",
-          status: "Active",
-        },
-        "3": {
-          name: "Global Industries Ltd",
-          email: "accounts@globalind.com",
-          phone: "+1-555-0103",
-          city: "London",
-          status: "Active",
-        },
-      };
-      if (mockCustomers[id]) {
-        setFormData(mockCustomers[id]);
+    if (isEditing && id) {
+      const customer = customerList.find((c) => c.id === id);
+      if (customer) {
+        setFormData(customer);
       }
     }
   }, [id, isEditing]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name || formData.name.length < 2) {
-      newErrors.name = "Name must be at least 2 characters";
+
+    if (!formData.first_name || formData.first_name.trim().length < 2) {
+      newErrors.first_name = "First name must be at least 2 characters";
+    }
+    if (!formData.last_name || formData.last_name.trim().length < 2) {
+      newErrors.last_name = "Last name must be at least 2 characters";
+    }
+    if (!formData.company_name || formData.company_name.trim().length < 2) {
+      newErrors.company_name = "Company name must be at least 2 characters";
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = "Invalid email address";
     }
-    if (!formData.phone) {
-      newErrors.phone = "Phone is required";
+    if (!formData.phone || formData.phone.trim().length < 5) {
+      newErrors.phone = "Phone must be valid";
     }
-    if (!formData.city) {
-      newErrors.city = "City is required";
-    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -86,7 +79,10 @@ export default function AddCustomer() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "opening_balance" ? parseFloat(value) || 0 : value,
+    }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -94,63 +90,137 @@ export default function AddCustomer() {
 
   return (
     <Layout>
-      <div className="h-screen flex flex-col">
-        {/* Fixed Header */}
-        <div className="flex-shrink-0 border-b border-border pb-4 pt-0">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(RedirectionRoutes.customer)}
-              className="p-1 rounded-lg hover:bg-muted transition-colors"
-              title="Back"
-            >
-              <ArrowLeft size={20} className="text-foreground" />
-            </button>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">
-                {isEditing ? "Edit Customer" : "Add Customer"}
-              </h1>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing
-                  ? "Update customer information"
-                  : "Create a new customer record"}
-              </p>
-            </div>
+      {/* Fixed Header */}
+      <div className="border-b border-border pb-4 mb-3">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate(RedirectionRoutes.customer)}
+            className="p-1 rounded-lg hover:bg-muted transition-colors"
+            title="Back"
+          >
+            <ArrowLeft size={20} className="text-foreground" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold text-foreground">
+              {isEditing ? "Edit Customer" : "Add Customer"}
+            </h1>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {isEditing
+                ? "Update customer information"
+                : "Create a new customer record"}
+            </p>
           </div>
-        </div>
+                </div>
+      </div>
 
+      {/* Main Container with Scrollable Content and Fixed Footer */}
+      <div className="w-full flex flex-col gap-0" style={{ height: "calc(100vh - 73px - 80px)" }}>
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
-          <Card className="m-4 p-6 max-w-2xl">
-            <form id="customer-form" className="space-y-4">
+          <Card className="p-6 max-w-3xl">
+          <form id="customer-form" className="space-y-6">
+            {/* Salutation */}
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-2">
+                Salutation
+              </label>
+              <select
+                name="salutation"
+                value={formData.salutation || "Mr."}
+                onChange={handleChange}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              >
+                {SALUTATIONS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* First Name and Last Name */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  Customer Name <span className="text-destructive">*</span>
+                  First Name <span className="text-destructive">*</span>
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  value={formData.name}
+                  name="first_name"
+                  value={formData.first_name || ""}
                   onChange={handleChange}
-                  placeholder="Enter customer name"
+                  placeholder="Enter first name"
                   className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.name
+                    errors.first_name
                       ? "border-destructive bg-destructive/5 focus:border-destructive"
                       : "border-border bg-background focus:border-primary"
                   }`}
                 />
-                {errors.name && (
-                  <p className="text-xs text-destructive mt-1">{errors.name}</p>
+                {errors.first_name && (
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.first_name}
+                  </p>
                 )}
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  Email <span className="text-destructive">*</span>
+                  Last Name <span className="text-destructive">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={formData.last_name || ""}
+                  onChange={handleChange}
+                  placeholder="Enter last name"
+                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                    errors.last_name
+                      ? "border-destructive bg-destructive/5 focus:border-destructive"
+                      : "border-border bg-background focus:border-primary"
+                  }`}
+                />
+                {errors.last_name && (
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.last_name}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Company Name */}
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-2">
+                Company Name <span className="text-destructive">*</span>
+              </label>
+              <input
+                type="text"
+                name="company_name"
+                value={formData.company_name || ""}
+                onChange={handleChange}
+                placeholder="Enter company name"
+                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                  errors.company_name
+                    ? "border-destructive bg-destructive/5 focus:border-destructive"
+                    : "border-border bg-background focus:border-primary"
+                }`}
+              />
+              {errors.company_name && (
+                <p className="text-xs text-destructive mt-1">
+                  {errors.company_name}
+                </p>
+              )}
+            </div>
+
+            {/* Email and Phone */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-2">
+                  Email
                 </label>
                 <input
                   type="email"
                   name="email"
-                  value={formData.email}
+                  value={formData.email || ""}
                   onChange={handleChange}
                   placeholder="customer@example.com"
                   className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
@@ -173,7 +243,7 @@ export default function AddCustomer() {
                 <input
                   type="text"
                   name="phone"
-                  value={formData.phone}
+                  value={formData.phone || ""}
                   onChange={handleChange}
                   placeholder="+1-555-0000"
                   className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
@@ -188,73 +258,108 @@ export default function AddCustomer() {
                   </p>
                 )}
               </div>
+            </div>
 
+            {/* Language and Currency */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  City <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  placeholder="City name"
-                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.city
-                      ? "border-destructive bg-destructive/5 focus:border-destructive"
-                      : "border-border bg-background focus:border-primary"
-                  }`}
-                />
-                {errors.city && (
-                  <p className="text-xs text-destructive mt-1">{errors.city}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Status
+                  Language
                 </label>
                 <select
-                  name="status"
-                  value={formData.status}
+                  name="language"
+                  value={formData.language || "English"}
                   onChange={handleChange}
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
+                  {LANGUAGES.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
                 </select>
               </div>
-            </form>
-          </Card>
-        </div>
 
-        {/* Fixed Footer with Buttons */}
-        <div className="flex-shrink-0 border-t border-border bg-background p-4">
-          <div className="flex gap-3 max-w-2xl">
-            <Button
-              type="submit"
-              form="customer-form"
-              disabled={isLoading}
-              onClick={handleSubmit}
-              className="bg-primary text-white text-sm"
-            >
-              {isLoading
-                ? "Saving..."
-                : isEditing
-                  ? "Update Customer"
-                  : "Add Customer"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => navigate(RedirectionRoutes.customer)}
-              variant="outline"
-              className="text-sm"
-            >
-              Cancel
-            </Button>
-          </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-2">
+                  Currency
+                </label>
+                <select
+                  name="currency"
+                  value={formData.currency || "USD"}
+                  onChange={handleChange}
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                >
+                  {CURRENCIES.map((curr) => (
+                    <option key={curr} value={curr}>
+                      {curr}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Account Receivable and Opening Balance */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-2">
+                  Account Receivable
+                </label>
+                <input
+                  type="text"
+                  name="account_recievable"
+                  value={formData.account_recievable || "0"}
+                  onChange={handleChange}
+                  placeholder="0"
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-2">
+                  Opening Balance
+                </label>
+                <input
+                  type="number"
+                  name="opening_balance"
+                  value={formData.opening_balance || 0}
+                  onChange={handleChange}
+                  placeholder="0"
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                />
+              </div>
+            </div>
+          </form>
+        </Card>
+      </div>
+
+              {/* Fixed Footer with Buttons */}
+        <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0">
+          <div className="flex gap-3 max-w-3xl">
+          <Button
+            type="submit"
+            form="customer-form"
+            disabled={isLoading}
+            onClick={handleSubmit}
+            className="bg-primary text-white text-sm"
+          >
+            {isLoading
+              ? "Saving..."
+              : isEditing
+                ? "Update Customer"
+                : "Add Customer"}
+          </Button>
+          <Button
+            type="button"
+            onClick={() => navigate(RedirectionRoutes.customer)}
+            variant="outline"
+            className="text-sm"
+          >
+            Cancel
+          </Button>
         </div>
       </div>
+    </div>
     </Layout>
   );
 }

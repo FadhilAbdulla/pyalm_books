@@ -6,22 +6,22 @@ import { FormModal } from "@/components/FormModal";
 import { Plus } from "lucide-react";
 import DataTable from "@/components/ui/dataTable";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { invoiceList, Invoice } from "@/common/data/demo";
+import { recurringList, RecurringInvoice } from "@/common/data/demo";
 
-export default function Invoices() {
+export default function Recurring() {
   const navigate = useNavigate();
-  const [invoices, setInvoices] = useState<Invoice[]>(invoiceList);
+  const [recurring, setRecurring] = useState<RecurringInvoice[]>(recurringList);
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "create" | "edit" | "view" | "delete";
-    invoice?: Invoice;
+    item?: RecurringInvoice;
   }>({ isOpen: false, mode: "create" });
 
-  const handleDeleteInvoice = async () => {
+  const handleDeleteRecurring = async () => {
     await new Promise((resolve) => setTimeout(resolve, 800));
-    if (modalState.invoice) {
-      setInvoices(invoices.filter((inv) => inv.id !== modalState.invoice!.id));
+    if (modalState.item) {
+      setRecurring(recurring.filter((item) => item.id !== modalState.item!.id));
     }
     setModalState({ isOpen: false, mode: "create" });
   };
@@ -32,23 +32,23 @@ export default function Invoices() {
         {/* Header */}
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-lg font-bold text-foreground">Invoices</h1>
+            <h1 className="text-lg font-bold text-foreground">Recurring Invoices</h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Create, send, and manage your invoices
+              Set up and manage recurring billing
             </p>
           </div>
           <Button
-            onClick={() => navigate(RedirectionRoutes.invoicesNew)}
+            onClick={() => navigate(RedirectionRoutes.recurringNew)}
             className="bg-primary text-white text-xs"
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Invoice
+            Add Recurring
           </Button>
         </div>
 
         <DataTable
-          dataSource={invoices}
-          tableKey={"invoice"}
+          dataSource={recurring}
+          tableKey={"recurring"}
           totalPages={1}
         />
       </div>
@@ -56,16 +56,16 @@ export default function Invoices() {
       {/* Delete Confirmation Modal */}
       <FormModal
         isOpen={modalState.isOpen && modalState.mode === "delete"}
-        title="Delete Invoice"
+        title="Delete Recurring Invoice"
         fields={[
           {
             id: "confirmation",
-            label: `Are you sure you want to delete invoice "${modalState.invoice?.invoiceNumber}"? This action cannot be undone.`,
+            label: `Are you sure you want to delete recurring invoice "${modalState.item?.invoiceNumber}"? This action cannot be undone.`,
             type: "text",
           },
         ]}
         onSubmit={async () => {}}
-        onConfirm={handleDeleteInvoice}
+        onConfirm={handleDeleteRecurring}
         onClose={() => setModalState({ isOpen: false, mode: "create" })}
         mode="view"
       />

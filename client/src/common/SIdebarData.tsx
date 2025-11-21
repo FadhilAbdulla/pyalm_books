@@ -88,22 +88,22 @@ export const SidebarData: MainItem[] = [
         },
       },
       {
-        link: RedirectionRoutes.customer,
+        link: RedirectionRoutes.recurring,
         name: "Recurring",
         icon: TrendingUp,
       },
       {
-        link: RedirectionRoutes.customer,
+        link: RedirectionRoutes.challans,
         name: "Challans",
         icon: FileText,
       },
       {
-        link: RedirectionRoutes.customer,
+        link: RedirectionRoutes.payments,
         name: "Payments",
         icon: DollarSign,
       },
       {
-        link: RedirectionRoutes.customer,
+        link: RedirectionRoutes.credits,
         name: "Credits",
         icon: CreditCard,
       },

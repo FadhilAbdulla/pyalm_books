@@ -5,34 +5,34 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { Invoice } from "@/common/data/demo";
-import { invoiceList } from "@/common/data/demo";
+import { Challan } from "@/common/data/demo";
+import { challanList } from "@/common/data/demo";
 
-const STATUSES = ["Draft", "Sent", "Paid", "Overdue", "Cancelled"];
+const STATUSES = ["Draft", "Dispatched", "Delivered", "Cancelled"];
 
-export default function AddInvoice() {
+export default function AddChallan() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<Partial<Invoice>>({
-    invoiceNumber: "",
+  const [formData, setFormData] = useState<Partial<Challan>>({
+    challanNumber: "",
     customerName: "",
     email: "",
     amount: 0,
     status: "Draft",
     issueDate: "",
-    dueDate: "",
-    paymentTerms: "Net 30",
-    notes: "",
+    expectedDate: "",
+    deliveryAddress: "",
+    itemCount: 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (isEditing && id) {
-      const invoice = invoiceList.find((i) => i.id === id);
-      if (invoice) {
-        setFormData(invoice);
+      const challan = challanList.find((ch) => ch.id === id);
+      if (challan) {
+        setFormData(challan);
       }
     }
   }, [id, isEditing]);
@@ -40,11 +40,14 @@ export default function AddInvoice() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.invoiceNumber || formData.invoiceNumber.trim().length < 2) {
-      newErrors.invoiceNumber = "Invoice number is required";
+    if (!formData.challanNumber || formData.challanNumber.trim().length < 2) {
+      newErrors.challanNumber = "Challan number is required";
     }
     if (!formData.customerName || formData.customerName.trim().length < 2) {
       newErrors.customerName = "Customer name is required";
+    }
+    if (!formData.deliveryAddress || formData.deliveryAddress.trim().length < 5) {
+      newErrors.deliveryAddress = "Delivery address is required";
     }
     if (!formData.amount || formData.amount <= 0) {
       newErrors.amount = "Amount must be greater than 0";
@@ -52,8 +55,8 @@ export default function AddInvoice() {
     if (!formData.issueDate) {
       newErrors.issueDate = "Issue date is required";
     }
-    if (!formData.dueDate) {
-      newErrors.dueDate = "Due date is required";
+    if (!formData.expectedDate) {
+      newErrors.expectedDate = "Expected date is required";
     }
 
     setErrors(newErrors);
@@ -67,7 +70,7 @@ export default function AddInvoice() {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
-    navigate(RedirectionRoutes.invoices);
+    navigate(RedirectionRoutes.challans);
   };
 
   const handleChange = (
@@ -76,7 +79,7 @@ export default function AddInvoice() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "amount" ? parseInt(value) || 0 : value,
+      [name]: name === "amount" || name === "itemCount" ? parseInt(value) || 0 : value,
     }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -89,7 +92,7 @@ export default function AddInvoice() {
       <div className="border-b border-border pb-4 mb-3">
         <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate(RedirectionRoutes.invoices)}
+              onClick={() => navigate(RedirectionRoutes.challans)}
               className="p-1 rounded-lg hover:bg-muted transition-colors"
               title="Back"
             >
@@ -97,10 +100,10 @@ export default function AddInvoice() {
             </button>
             <div>
               <h1 className="text-xl font-bold text-foreground">
-                {isEditing ? "Edit Invoice" : "Add Invoice"}
+                {isEditing ? "Edit Challan" : "Add Challan"}
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing ? "Update invoice details" : "Create a new invoice"}
+                {isEditing ? "Update challan details" : "Create a new challan"}
               </p>
             </div>
                   </div>
@@ -111,27 +114,27 @@ export default function AddInvoice() {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <Card className="p-6 max-w-3xl">
-            <form id="invoice-form" className="space-y-6">
-              {/* Invoice Number and Status */}
+            <form id="challan-form" className="space-y-6">
+              {/* Challan Number and Status */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Invoice Number <span className="text-destructive">*</span>
+                    Challan Number <span className="text-destructive">*</span>
                   </label>
                   <input
                     type="text"
-                    name="invoiceNumber"
-                    value={formData.invoiceNumber || ""}
+                    name="challanNumber"
+                    value={formData.challanNumber || ""}
                     onChange={handleChange}
-                    placeholder="INV-2024-001"
+                    placeholder="CH-2024-001"
                     className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.invoiceNumber
+                      errors.challanNumber
                         ? "border-destructive bg-destructive/5 focus:border-destructive"
                         : "border-border bg-background focus:border-primary"
                     }`}
                   />
-                  {errors.invoiceNumber && (
-                    <p className="text-xs text-destructive mt-1">{errors.invoiceNumber}</p>
+                  {errors.challanNumber && (
+                    <p className="text-xs text-destructive mt-1">{errors.challanNumber}</p>
                   )}
                 </div>
 
@@ -192,7 +195,7 @@ export default function AddInvoice() {
                 </div>
               </div>
 
-              {/* Amount and Issue Date */}
+              {/* Amount and Item Count */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
@@ -217,6 +220,45 @@ export default function AddInvoice() {
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
+                    Item Count
+                  </label>
+                  <input
+                    type="number"
+                    name="itemCount"
+                    value={formData.itemCount || 0}
+                    onChange={handleChange}
+                    placeholder="0"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Delivery Address */}
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-2">
+                  Delivery Address <span className="text-destructive">*</span>
+                </label>
+                <textarea
+                  name="deliveryAddress"
+                  value={formData.deliveryAddress || ""}
+                  onChange={handleChange}
+                  placeholder="Enter delivery address"
+                  rows={3}
+                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                    errors.deliveryAddress
+                      ? "border-destructive bg-destructive/5 focus:border-destructive"
+                      : "border-border bg-background focus:border-primary"
+                  }`}
+                />
+                {errors.deliveryAddress && (
+                  <p className="text-xs text-destructive mt-1">{errors.deliveryAddress}</p>
+                )}
+              </div>
+
+              {/* Issue and Expected Dates */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
                     Issue Date <span className="text-destructive">*</span>
                   </label>
                   <input
@@ -234,58 +276,26 @@ export default function AddInvoice() {
                     <p className="text-xs text-destructive mt-1">{errors.issueDate}</p>
                   )}
                 </div>
-              </div>
 
-              {/* Due Date and Payment Terms */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Due Date <span className="text-destructive">*</span>
+                    Expected Date <span className="text-destructive">*</span>
                   </label>
                   <input
                     type="date"
-                    name="dueDate"
-                    value={formData.dueDate || ""}
+                    name="expectedDate"
+                    value={formData.expectedDate || ""}
                     onChange={handleChange}
                     className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.dueDate
+                      errors.expectedDate
                         ? "border-destructive bg-destructive/5 focus:border-destructive"
                         : "border-border bg-background focus:border-primary"
                     }`}
                   />
-                  {errors.dueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.dueDate}</p>
+                  {errors.expectedDate && (
+                    <p className="text-xs text-destructive mt-1">{errors.expectedDate}</p>
                   )}
                 </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-2">
-                    Payment Terms
-                  </label>
-                  <input
-                    type="text"
-                    name="paymentTerms"
-                    value={formData.paymentTerms || ""}
-                    onChange={handleChange}
-                    placeholder="Net 30"
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Notes
-                </label>
-                <textarea
-                  name="notes"
-                  value={formData.notes || ""}
-                  onChange={handleChange}
-                  placeholder="Add additional notes"
-                  rows={4}
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                />
               </div>
             </form>
           </Card>
@@ -296,16 +306,16 @@ export default function AddInvoice() {
           <div className="flex gap-3 max-w-3xl">
             <Button
               type="submit"
-              form="invoice-form"
+              form="challan-form"
               disabled={isLoading}
               onClick={handleSubmit}
               className="bg-primary text-white text-sm"
             >
-              {isLoading ? "Saving..." : isEditing ? "Update Invoice" : "Add Invoice"}
+              {isLoading ? "Saving..." : isEditing ? "Update Challan" : "Add Challan"}
             </Button>
             <Button
               type="button"
-              onClick={() => navigate(RedirectionRoutes.invoices)}
+              onClick={() => navigate(RedirectionRoutes.challans)}
               variant="outline"
               className="text-sm"
             >
