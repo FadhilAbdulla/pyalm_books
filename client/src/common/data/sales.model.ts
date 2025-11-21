@@ -56,12 +56,19 @@ export interface Quote {
     issueDate: string;
     expiryDate: string;
     notes: string;
+    // Optional cart items used by the newer UI
+    cart_items?: CartItem[];
+    // Legacy item shape (some demo entries used this)
+    items?: Array<{ description?: string; quantity?: number; unitPrice?: number }>;
+    // Optional template selection for quote preview
+    template?: string;
 }
 
 export interface Invoice {
     id: string;
     invoiceNumber: string;
     customerName: string;
+    email?: string;
     sales_person_id?: string;
     salesPersonName?: string;
     cart_items: CartItem[];
@@ -77,6 +84,7 @@ export interface RecurringInvoice {
     id: string;
     invoiceNumber: string;
     customerName: string;
+    email?: string;
     sales_person_id?: string;
     salesPersonName?: string;
     cart_items: CartItem[];
@@ -96,6 +104,7 @@ export interface Challan {
     id: string;
     challanNumber: string;
     customerName: string;
+    email?: string;
     type: string;
     cart_items: CartItem[];
     amount: number;
@@ -113,6 +122,7 @@ export interface Payment {
     paymentNumber: string;
     invoiceNumber: string;
     customerName: string;
+    email?: string;
     amount: number;
     status: "Completed" | "Pending" | "Failed" | "Cancelled";
     method: "Bank Transfer" | "Credit Card" | "Cash" | "Cheque";

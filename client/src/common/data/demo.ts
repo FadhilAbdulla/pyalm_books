@@ -138,6 +138,9 @@ export const invoiceList = [
         dueDate: "2024-07-28",
         paymentTerms: "Net 30",
         notes: "Professional services",
+        cart_items: [
+            { id: "ci-inv-1", item_id: "itm-100", item_name: "Consulting", quantity: "2", rate: "2500", discount: "0" }
+        ],
     },
     {
         id: "2",
@@ -150,6 +153,7 @@ export const invoiceList = [
         dueDate: "2024-07-25",
         paymentTerms: "Net 30",
         notes: "Software license",
+        cart_items: [],
     },
     {
         id: "3",
@@ -162,6 +166,7 @@ export const invoiceList = [
         dueDate: "2024-07-15",
         paymentTerms: "Net 30",
         notes: "Consulting project",
+        cart_items: [],
     },
 ];
 
@@ -177,6 +182,8 @@ export const recurringList = [
         startDate: "2024-01-15",
         nextDate: "2024-07-15",
         endDate: null,
+        cart_items: [],
+        notes: "",
     },
     {
         id: "2",
@@ -189,6 +196,8 @@ export const recurringList = [
         startDate: "2024-03-01",
         nextDate: "2024-09-01",
         endDate: null,
+        cart_items: [],
+        notes: "",
     },
     {
         id: "3",
@@ -201,6 +210,8 @@ export const recurringList = [
         startDate: "2024-02-15",
         nextDate: "2024-08-15",
         endDate: null,
+        cart_items: [],
+        notes: "",
     },
 ];
 
@@ -216,6 +227,7 @@ export const challanList = [
         expectedDate: "2024-06-25",
         deliveryAddress: "123 Business St, NY 10001",
         itemCount: 5,
+        cart_items: [],
     },
     {
         id: "2",
@@ -228,6 +240,7 @@ export const challanList = [
         expectedDate: "2024-07-02",
         deliveryAddress: "456 Tech Ave, CA 94000",
         itemCount: 3,
+        cart_items: [],
     },
     {
         id: "3",
@@ -240,6 +253,7 @@ export const challanList = [
         expectedDate: "2024-07-01",
         deliveryAddress: "789 Industrial Blvd, TX 75001",
         itemCount: 8,
+        cart_items: [],
     },
 ];
 
@@ -295,6 +309,7 @@ export const creditList = [
         issueDate: "2024-06-28",
         appliedDate: "2024-06-30",
         notes: "Partial refund for defective items",
+        cart_items: [],
     },
     {
         id: "2",
@@ -308,6 +323,7 @@ export const creditList = [
         issueDate: "2024-06-25",
         appliedDate: null,
         notes: "5% early payment discount",
+        cart_items: [],
     },
     {
         id: "3",
@@ -321,5 +337,6 @@ export const creditList = [
         issueDate: "2024-06-20",
         appliedDate: "2024-06-25",
         notes: "10% bulk purchase discount",
+        cart_items: [],
     },
 ];

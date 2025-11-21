@@ -258,13 +258,12 @@ export function Layout({ children }: LayoutProps) {
                 to={RedirectionRoutes.dashboard}
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-r from-primary to-accent">
-                  <span className="text-xs font-bold text-white">AF</span>
-                </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-sm font-bold text-foreground leading-tight">
-                    AccFlow
-                  </h1>
+                  <img
+                    src="/logo.png"
+                    alt="Books Logo"
+                    className="h-6 w-auto"
+                  />
                 </div>
               </Link>
             </div>

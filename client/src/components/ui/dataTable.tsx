@@ -17,6 +17,12 @@ import {
   SalesEditRoutes as editRoutes,
 } from "@/common/data/sales.data";
 import {
+  PurchaseCategoryOptions as purchaseCategoryOptions,
+  PurchaseSortOptions as purchaseSortOptions,
+  PurchaseTableColumns as PurchaseTableColumns,
+  PurchaseEditRoutes as purchaseEditRoutes,
+} from "@/common/data/purchase.data";
+import {
   getNavigationLink,
   PerPageCount,
   SortOrder,
@@ -60,19 +66,31 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
   const startIndex = (page_number - 1) * per_page;
   const endIndex = startIndex + per_page;
 
+  // choose mappings: prefer purchase mappings when available for this tableKey
+  const columns = (PurchaseTableColumns as any)?.[tableKey]
+    ? (PurchaseTableColumns as any)[tableKey]
+    : TableColumns?.[tableKey];
+
+  const sortOptionsForTable =
+    (purchaseSortOptions as any)?.[tableKey] || sortOptions?.[tableKey];
+  const categoryOptionsForTable =
+    (purchaseCategoryOptions as any)?.[tableKey] || categoryOptions?.[tableKey];
+  const editRoutesForTable =
+    (purchaseEditRoutes as any)?.[tableKey] || (editRoutes as any)?.[tableKey];
+
   return (
     <>
       {/* Advanced Filter */}
       <SimpleFilter
-        sortOptions={sortOptions?.[tableKey]}
-        categoryOptions={categoryOptions?.[tableKey]}
+        sortOptions={sortOptionsForTable}
+        categoryOptions={categoryOptionsForTable}
       />
 
       {/* Results Info */}
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>
           Showing {startIndex + 1}-{Math.min(endIndex, dataSource.length)} of{" "}
-          {dataSource.length} customers
+          {dataSource.length} records
         </span>
         <div className="flex items-center gap-2">
           <label className="text-xs">Records per page:</label>
@@ -99,7 +117,7 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
           >
             <thead className="border-b border-border bg-muted/50">
               <tr>
-                {TableColumns?.[tableKey]?.map((it) => (
+                {columns?.map((it) => (
                   <th
                     key={it.key}
                     className="px-4 py-2 text-left font-semibold text-foreground"
@@ -112,7 +130,6 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                         {it.name}
 
                         {sort_column === it.key ? (
-                          // <span className="text-blue-600">✓</span>
                           sort_order === "A" ? (
                             <ArrowUp size={12} className="text-blue-400" />
                           ) : (
@@ -138,9 +155,9 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                   key={record.id}
                   className="border-b border-border hover:bg-muted/50 transition-colors group"
                 >
-                  {TableColumns?.[tableKey]?.map((it) =>
+                  {columns?.map((it) =>
                     it.redirect ? (
-                      <td className="px-4 py-2 font-medium">
+                      <td className="px-4 py-2 font-medium" key={it.key}>
                         <button
                           onClick={() =>
                             navigate(getNavigationLink(it.redirect, record.id))
@@ -151,8 +168,10 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                         </button>
                       </td>
                     ) : (
-                      <td className="px-4 py-2 text-muted-foreground">
-                        {/* //font-semibold */}
+                      <td
+                        className="px-4 py-2 text-muted-foreground"
+                        key={it.key}
+                      >
                         {record?.[it.key]}
                       </td>
                     )
@@ -173,7 +192,7 @@ const DataTable = ({ dataSource, tableKey, totalPages }) => {
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => {
-                          const editRoute = editRoutes[tableKey];
+                          const editRoute = editRoutesForTable;
                           if (editRoute) {
                             navigate(getNavigationLink(editRoute, record.id));
                           }

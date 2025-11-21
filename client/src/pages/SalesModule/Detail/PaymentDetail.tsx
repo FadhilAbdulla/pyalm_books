@@ -58,15 +58,17 @@ export default function PaymentDetail() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    (window.location.href = `mailto:${(current as any).email}`)
-                  }
-                  className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
-                  title="Email"
-                >
-                  <Mail size={16} />
-                </button>
+                {current.email && (
+                  <button
+                    onClick={() =>
+                      (window.location.href = `mailto:${current.email}`)
+                    }
+                    className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
+                    title="Email"
+                  >
+                    <Mail size={16} />
+                  </button>
+                )}
                 <button
                   onClick={() => navigate(`/sales/payments/${current.id}`)}
                   className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"

@@ -59,15 +59,17 @@ export default function ChallanDetail() {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={() =>
-                    (window.location.href = `mailto:${(current as any).email}`)
-                  }
-                  className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
-                  title="Email"
-                >
-                  <Mail size={16} />
-                </button>
+                {current.email && (
+                  <button
+                    onClick={() =>
+                      (window.location.href = `mailto:${current.email}`)
+                    }
+                    className="p-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
+                    title="Email"
+                  >
+                    <Mail size={16} />
+                  </button>
+                )}
                 <button
                   onClick={() => navigate(`/sales/challans/${current.id}`)}
                   className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
@@ -89,59 +91,54 @@ export default function ChallanDetail() {
             <Card className="p-4">
               <h3 className="font-semibold text-foreground mb-2">Details</h3>
               <p className="text-sm text-muted-foreground">
-                Issued Date: {(current as any).issueDate}
+                Issued Date: {current.issueDate}
               </p>
             </Card>
-            {(current as any).cart_items &&
-              ((current as any).cart_items || []).length > 0 && (
-                <Card className="p-4">
-                  <h3 className="font-semibold text-foreground mb-2">Items</h3>
-                  <div className="max-h-72 overflow-y-auto rounded">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b-2 border-foreground/20">
-                          <th className="text-left py-2 text-foreground">
-                            Item
-                          </th>
-                          <th className="text-center py-2 text-foreground">
-                            Qty
-                          </th>
-                          <th className="text-right py-2 text-foreground">
-                            Rate
-                          </th>
-                          <th className="text-right py-2 text-foreground">
-                            Amount
-                          </th>
+            {current.cart_items && current.cart_items.length > 0 && (
+              <Card className="p-4">
+                <h3 className="font-semibold text-foreground mb-2">Items</h3>
+                <div className="max-h-72 overflow-y-auto rounded">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b-2 border-foreground/20">
+                        <th className="text-left py-2 text-foreground">Item</th>
+                        <th className="text-center py-2 text-foreground">
+                          Qty
+                        </th>
+                        <th className="text-right py-2 text-foreground">
+                          Rate
+                        </th>
+                        <th className="text-right py-2 text-foreground">
+                          Amount
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {current.cart_items.map((it) => (
+                        <tr
+                          key={it.id}
+                          className="border-b border-foreground/10"
+                        >
+                          <td className="py-3 text-foreground">
+                            {it.item_name}
+                          </td>
+                          <td className="text-center text-foreground">
+                            {it.quantity}
+                          </td>
+                          <td className="text-right text-foreground">
+                            ${Number(it.rate).toFixed(2)}
+                          </td>
+                          <td className="text-right font-medium text-foreground">
+                            $
+                            {(Number(it.rate) * Number(it.quantity)).toFixed(2)}
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {((current as any).cart_items || []).map((it: any) => (
-                          <tr
-                            key={it.id}
-                            className="border-b border-foreground/10"
-                          >
-                            <td className="py-3 text-foreground">
-                              {it.item_name}
-                            </td>
-                            <td className="text-center text-foreground">
-                              {it.quantity}
-                            </td>
-                            <td className="text-right text-foreground">
-                              ${Number(it.rate).toFixed(2)}
-                            </td>
-                            <td className="text-right font-medium text-foreground">
-                              $
-                              {(Number(it.rate) * Number(it.quantity)).toFixed(
-                                2
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </Card>
-              )}
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
           </div>
         </div>
       </div>

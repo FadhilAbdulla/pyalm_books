@@ -135,34 +135,64 @@ export const SidebarData: MainItem[] = [
     link: RedirectionRoutes.purchase,
     subItems: [
       {
-        link: RedirectionRoutes.purchase,
+        link: RedirectionRoutes.vendors,
         name: "Vendors",
         icon: Users,
+        customItem: {
+          link: RedirectionRoutes.vendorsNew,
+          name: "Add Vendor",
+          icon: Plus,
+        },
       },
       {
-        link: RedirectionRoutes.purchase,
+        link: RedirectionRoutes.expenses,
         name: "Expenses",
         icon: DollarSign,
+        customItem: {
+          link: RedirectionRoutes.expensesNew,
+          name: "Add Expense",
+          icon: Plus,
+        },
       },
       {
-        link: RedirectionRoutes.purchase,
+        link: RedirectionRoutes.recurring,
         name: "Recurring",
         icon: TrendingUp,
+        customItem: {
+          link: RedirectionRoutes.recurringNew,
+          name: "Add Recurring",
+          icon: Plus,
+        },
       },
       {
-        link: RedirectionRoutes.purchase,
+        link: RedirectionRoutes.bills,
         name: "Bills",
         icon: Receipt,
+        customItem: {
+          link: RedirectionRoutes.billsNew,
+          name: "Add Bill",
+          icon: Plus,
+        },
       },
       {
-        link: RedirectionRoutes.purchase,
-        name: "Paid",
+        link: RedirectionRoutes.payments,
+        name: "Payments Made",
         icon: DollarSign,
+        customItem: {
+          link: RedirectionRoutes.paymentsNew,
+          name: "Add Payment",
+          icon: Plus,
+        },
       },
       {
-        link: RedirectionRoutes.purchase,
+        link: RedirectionRoutes.vendorCredits,
         name: "Credits",
         icon: CreditCard,
+        customItem: {
+          link: RedirectionRoutes.vendorCreditsNew,
+          name: "Add Credit",
+          icon: Plus,
+        },
       },
     ],
   },

@@ -2,6 +2,7 @@ import Purchases from "../pages/Purchases";
 import Inventory from "../pages/Inventory";
 import { RedirectionRoutes } from "./RedirectionRoutes";
 import { SalesElement } from "./data/sales.routes";
+import { PurchaseElement } from "./data/purchase.routes";
 import { CommonElementRoutes } from "./data/common.routes";
 import { PublicRouteElement } from "./data/public.routes";
 
@@ -11,6 +12,7 @@ export interface RoutesElement {
 }
 
 export const PrivateRoutes: RoutesElement[] = [
+  ...PurchaseElement,
   ...SalesElement,
   ...CommonElementRoutes,
   ...PublicRouteElement,
