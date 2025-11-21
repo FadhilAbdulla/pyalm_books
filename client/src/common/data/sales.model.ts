@@ -62,7 +62,9 @@ export interface Invoice {
     id: string;
     invoiceNumber: string;
     customerName: string;
-    email: string;
+    sales_person_id?: string;
+    salesPersonName?: string;
+    cart_items: CartItem[];
     amount: number;
     status: "Draft" | "Sent" | "Paid" | "Overdue" | "Cancelled";
     issueDate: string;
@@ -75,26 +77,35 @@ export interface RecurringInvoice {
     id: string;
     invoiceNumber: string;
     customerName: string;
-    email: string;
+    sales_person_id?: string;
+    salesPersonName?: string;
+    cart_items: CartItem[];
     amount: number;
     status: "Active" | "Paused" | "Ended" | "Draft";
-    frequency: "Weekly" | "Monthly" | "Quarterly" | "Yearly";
+    frequency: "Weekly" | "Monthly" | "Quarterly" | "Yearly" | "2 Months" | "Custome"
     startDate: string;
     nextDate: string;
     endDate: string | null;
+    subject: string;
+    paymentTerms: string;
+    notes: string;
+
 }
 
 export interface Challan {
     id: string;
     challanNumber: string;
     customerName: string;
-    email: string;
+    type: string;
+    cart_items: CartItem[];
     amount: number;
     status: "Draft" | "Dispatched" | "Delivered" | "Cancelled";
     issueDate: string;
     expectedDate: string;
     deliveryAddress: string;
     itemCount: number;
+    paymentTerms: string;
+    notes: string;
 }
 
 export interface Payment {
@@ -102,24 +113,29 @@ export interface Payment {
     paymentNumber: string;
     invoiceNumber: string;
     customerName: string;
-    email: string;
     amount: number;
     status: "Completed" | "Pending" | "Failed" | "Cancelled";
     method: "Bank Transfer" | "Credit Card" | "Cash" | "Cheque";
     paymentDate: string;
     referenceNumber: string;
+    depoistTo: string;
+    notes: string;
 }
 
 export interface CreditNote {
     id: string;
+    customerName: string;
     creditNumber: string;
     invoiceNumber: string;
-    customerName: string;
-    email: string;
+    sales_person_id?: string;
+    salesPersonName?: string;
+    subject: string;
+    paymentTerms: string;
+    notes: string;
+    cart_items: CartItem[];
+
     amount: number;
     status: "Draft" | "Issued" | "Applied" | "Cancelled";
-    reason: string;
     issueDate: string;
     appliedDate: string | null;
-    notes: string;
 }

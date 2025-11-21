@@ -21,9 +21,7 @@ export default function Challans() {
   const handleDeleteChallan = async () => {
     await new Promise((resolve) => setTimeout(resolve, 800));
     if (modalState.challan) {
-      setChallans(
-        challans.filter((ch) => ch.id !== modalState.challan!.id)
-      );
+      setChallans(challans.filter((ch) => ch.id !== modalState.challan!.id));
     }
     setModalState({ isOpen: false, mode: "create" });
   };
@@ -48,11 +46,7 @@ export default function Challans() {
           </Button>
         </div>
 
-        <DataTable
-          dataSource={challans}
-          tableKey={"challan"}
-          totalPages={1}
-        />
+        <DataTable dataSource={challans} tableKey={"challan"} totalPages={1} />
       </div>
 
       {/* Delete Confirmation Modal */}

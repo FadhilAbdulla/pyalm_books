@@ -97,37 +97,37 @@ export default function AddCustomer() {
 
   return (
     <Layout>
-      {/* Fixed Header */}
-      <div className="border-b border-border pb-4 mb-3">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(RedirectionRoutes.customer)}
-            className="p-1 rounded-lg hover:bg-muted transition-colors"
-            title="Back"
-          >
-            <ArrowLeft size={20} className="text-foreground" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">
-              {isEditing ? "Edit Customer" : "Add Customer"}
-            </h1>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {isEditing
-                ? "Update customer information"
-                : "Create a new customer record"}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Main Container with Scrollable Content and Fixed Footer */}
       <div
-        className="w-full flex flex-col gap-0"
-        style={{ height: "calc(100vh - 73px - 80px)" }}
+        className="w-full flex flex-col gap-0 pt-4"
+        style={{ height: "calc(100vh - 55px)" }}
       >
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mb-4">
           <Card className="p-6 max-w-3xl">
+            {/* Header (now scrollable with content) */}
+            <div className="border-b border-border pb-4 mb-3">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate(RedirectionRoutes.customer)}
+                  className="p-1 rounded-lg hover:bg-muted transition-colors"
+                  title="Back"
+                >
+                  <ArrowLeft size={20} className="text-foreground" />
+                </button>
+                <div>
+                  <h1 className="text-xl font-bold text-foreground">
+                    {isEditing ? "Edit Customer" : "Add Customer"}
+                  </h1>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {isEditing
+                      ? "Update customer information"
+                      : "Create a new customer record"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <form id="customer-form" className="space-y-6">
               {/* Salutation */}
               <div>

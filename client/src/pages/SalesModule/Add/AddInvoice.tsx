@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { Invoice } from "@/common/data/demo";
+import type { Invoice } from "@/common/data/sales.model";
+import type { CartItem } from "@/common/data/sales.model";
+import CartItemsTable from "@/components/ui/cartItemsTable";
 import { invoiceList } from "@/common/data/demo";
 
 const STATUSES = ["Draft", "Sent", "Paid", "Overdue", "Cancelled"];
@@ -18,7 +20,7 @@ export default function AddInvoice() {
   const [formData, setFormData] = useState<Partial<Invoice>>({
     invoiceNumber: "",
     customerName: "",
-    email: "",
+    salesPersonName: "",
     amount: 0,
     status: "Draft",
     issueDate: "",
@@ -27,6 +29,57 @@ export default function AddInvoice() {
     notes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [items, setItems] = useState<CartItem[]>([
+    {
+      id: String(Date.now()),
+      item_id: "",
+      item_name: "",
+      quantity: "1",
+      rate: "0",
+      discount: "0",
+    },
+  ]);
+
+  const addItem = () => {
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(Date.now() + Math.random()),
+        item_id: "",
+        item_name: "",
+        quantity: "1",
+        rate: "0",
+        discount: "0",
+      },
+    ]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length > 1)
+      setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleItemChange = (
+    index: number,
+    field: keyof CartItem,
+    value: string
+  ) => {
+    setItems((prev) => {
+      const next = [...prev];
+      // @ts-ignore
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const total = items.reduce((sum, it) => {
+    const q = parseFloat((it.quantity as any) || "0") || 0;
+    const r = parseFloat((it.rate as any) || "0") || 0;
+    const d = parseFloat((it.discount as any) || "0") || 0;
+    const row = Math.max(0, q * r - d);
+    return sum + row;
+  }, 0);
 
   useEffect(() => {
     if (isEditing && id) {
@@ -46,8 +99,16 @@ export default function AddInvoice() {
     if (!formData.customerName || formData.customerName.trim().length < 2) {
       newErrors.customerName = "Customer name is required";
     }
-    if (!formData.amount || formData.amount <= 0) {
-      newErrors.amount = "Amount must be greater than 0";
+    // validate computed total from items instead of manual amount
+    const itemsTotal = items.reduce((sum, it) => {
+      const q = parseFloat((it.quantity as any) || "0") || 0;
+      const r = parseFloat((it.rate as any) || "0") || 0;
+      const d = parseFloat((it.discount as any) || "0") || 0;
+      const row = Math.max(0, q * r - d);
+      return sum + row;
+    }, 0);
+    if (itemsTotal <= 0) {
+      newErrors.amount = "Add at least one item with a positive total";
     }
     if (!formData.issueDate) {
       newErrors.issueDate = "Issue date is required";
@@ -71,7 +132,9 @@ export default function AddInvoice() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -86,31 +149,36 @@ export default function AddInvoice() {
   return (
     <Layout>
       {/* Fixed Header */}
-      <div className="border-b border-border pb-4 mb-3">
-        <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(RedirectionRoutes.invoices)}
-              className="p-1 rounded-lg hover:bg-muted transition-colors"
-              title="Back"
-            >
-              <ArrowLeft size={20} className="text-foreground" />
-            </button>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">
-                {isEditing ? "Edit Invoice" : "Add Invoice"}
-              </h1>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing ? "Update invoice details" : "Create a new invoice"}
-              </p>
-            </div>
-                  </div>
-      </div>
-
-      {/* Main Container with Scrollable Content and Fixed Footer */}
-      <div className="w-full flex flex-col gap-0" style={{ height: "calc(100vh - 73px - 80px)" }}>
+      <div
+        className="w-full flex flex-col gap-0 pt-4"
+        style={{ height: "calc(100vh - 55px )" }}
+      >
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mb-4">
           <Card className="p-6 max-w-3xl">
+            {/* Header (scrollable) */}
+            <div className="border-b border-border pb-4 mb-3">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate(RedirectionRoutes.invoices)}
+                  className="p-1 rounded-lg hover:bg-muted transition-colors"
+                  title="Back"
+                >
+                  <ArrowLeft size={20} className="text-foreground" />
+                </button>
+                <div>
+                  <h1 className="text-xl font-bold text-foreground">
+                    {isEditing ? "Edit Invoice" : "Add Invoice"}
+                  </h1>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {isEditing
+                      ? "Update invoice details"
+                      : "Create a new invoice"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <form id="invoice-form" className="space-y-6">
               {/* Invoice Number and Status */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,7 +199,9 @@ export default function AddInvoice() {
                     }`}
                   />
                   {errors.invoiceNumber && (
-                    <p className="text-xs text-destructive mt-1">{errors.invoiceNumber}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.invoiceNumber}
+                    </p>
                   )}
                 </div>
 
@@ -154,7 +224,7 @@ export default function AddInvoice() {
                 </div>
               </div>
 
-              {/* Customer Name and Email */}
+              {/* Customer Name and Sales Person */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
@@ -173,45 +243,40 @@ export default function AddInvoice() {
                     }`}
                   />
                   {errors.customerName && (
-                    <p className="text-xs text-destructive mt-1">{errors.customerName}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.customerName}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Email
+                    Sales Person
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    value={formData.email || ""}
+                    type="text"
+                    name="salesPersonName"
+                    value={(formData as any).salesPersonName || ""}
                     onChange={handleChange}
-                    placeholder="customer@example.com"
+                    placeholder="Sales person"
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                   />
                 </div>
               </div>
 
-              {/* Amount and Issue Date */}
+              {/* Amount (computed from items) and Issue Date */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Amount <span className="text-destructive">*</span>
+                    Amount
                   </label>
-                  <input
-                    type="number"
-                    name="amount"
-                    value={formData.amount || 0}
-                    onChange={handleChange}
-                    placeholder="0.00"
-                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.amount
-                        ? "border-destructive bg-destructive/5 focus:border-destructive"
-                        : "border-border bg-background focus:border-primary"
-                    }`}
-                  />
+                  <div className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm">
+                    {total.toFixed(2)}
+                  </div>
                   {errors.amount && (
-                    <p className="text-xs text-destructive mt-1">{errors.amount}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.amount}
+                    </p>
                   )}
                 </div>
 
@@ -231,10 +296,20 @@ export default function AddInvoice() {
                     }`}
                   />
                   {errors.issueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.issueDate}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.issueDate}
+                    </p>
                   )}
                 </div>
               </div>
+
+              {/* Items Table */}
+              <CartItemsTable
+                items={items}
+                onAdd={addItem}
+                onRemove={removeItem}
+                onChangeItem={handleItemChange}
+              />
 
               {/* Due Date and Payment Terms */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -254,7 +329,9 @@ export default function AddInvoice() {
                     }`}
                   />
                   {errors.dueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.dueDate}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.dueDate}
+                    </p>
                   )}
                 </div>
 
@@ -291,29 +368,35 @@ export default function AddInvoice() {
           </Card>
         </div>
 
-                      {/* Fixed Footer with Buttons */}
+        {/* Fixed Footer with Buttons */}
         <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0">
-          <div className="flex gap-3 max-w-3xl">
-            <Button
-              type="submit"
-              form="invoice-form"
-              disabled={isLoading}
-              onClick={handleSubmit}
-              className="bg-primary text-white text-sm"
-            >
-              {isLoading ? "Saving..." : isEditing ? "Update Invoice" : "Add Invoice"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => navigate(RedirectionRoutes.invoices)}
-              variant="outline"
-              className="text-sm"
-            >
-              Cancel
-            </Button>
+          <div className="mx-auto w-full flex items-center justify-start">
+            <div className="flex gap-3">
+              <Button
+                type="submit"
+                form="invoice-form"
+                disabled={isLoading}
+                onClick={handleSubmit}
+                className="bg-primary text-white text-sm"
+              >
+                {isLoading
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Invoice"
+                    : "Add Invoice"}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => navigate(RedirectionRoutes.invoices)}
+                variant="outline"
+                className="text-sm"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </Layout>
   );
 }

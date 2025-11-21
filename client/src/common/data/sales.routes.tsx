@@ -16,6 +16,11 @@ import AddCredit from "@/pages/SalesModule/Add/AddCredit";
 
 import CustomerDetail from "@/pages/SalesModule/Detail/CustomerDetail";
 import QuoteDetail from "@/pages/SalesModule/Detail/QuoteDetail";
+import InvoiceDetail from "@/pages/SalesModule/Detail/InvoiceDetail";
+import RecurringDetail from "@/pages/SalesModule/Detail/RecurringDetail";
+import ChallanDetail from "@/pages/SalesModule/Detail/ChallanDetail";
+import PaymentDetail from "@/pages/SalesModule/Detail/PaymentDetail";
+import CreditDetail from "@/pages/SalesModule/Detail/CreditDetail";
 
 import { RoutesElement } from "../Routes";
 
@@ -47,7 +52,12 @@ export const SalesRoutes = {
   creditsEdit: `${SalesRoutePrefix}/credits/:id`,
 
   customerDetail: `${SalesRoutePrefix}/customers/view/:id`,
-  quotesDetail: `${SalesRoutePrefix}/quotes/detail/:id`,
+  quotesDetail: `${SalesRoutePrefix}/quotes/view/:id`,
+  invoicesDetail: `${SalesRoutePrefix}/invoices/view/:id`,
+  recurringDetail: `${SalesRoutePrefix}/recurring/view/:id`,
+  challansDetail: `${SalesRoutePrefix}/challans/view/:id`,
+  paymentsDetail: `${SalesRoutePrefix}/payments/view/:id`,
+  creditsDetail: `${SalesRoutePrefix}/credits/view/:id`,
 };
 
 export const SalesElement: RoutesElement[] = [
@@ -149,5 +159,25 @@ export const SalesElement: RoutesElement[] = [
   {
     path: SalesRoutes.quotesDetail,
     element: <QuoteDetail />,
+  },
+  {
+    path: SalesRoutes.invoicesDetail,
+    element: <InvoiceDetail />,
+  },
+  {
+    path: SalesRoutes.recurringDetail,
+    element: <RecurringDetail />,
+  },
+  {
+    path: SalesRoutes.challansDetail,
+    element: <ChallanDetail />,
+  },
+  {
+    path: SalesRoutes.paymentsDetail,
+    element: <PaymentDetail />,
+  },
+  {
+    path: SalesRoutes.creditsDetail,
+    element: <CreditDetail />,
   },
 ];

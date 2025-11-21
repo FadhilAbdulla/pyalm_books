@@ -5,8 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { Challan } from "@/common/data/demo";
+import type { Challan } from "@/common/data/sales.model";
 import { challanList } from "@/common/data/demo";
+import type { CartItem } from "@/common/data/sales.model";
+import CartItemsTable from "@/components/ui/cartItemsTable";
 
 const STATUSES = ["Draft", "Dispatched", "Delivered", "Cancelled"];
 
@@ -18,7 +20,7 @@ export default function AddChallan() {
   const [formData, setFormData] = useState<Partial<Challan>>({
     challanNumber: "",
     customerName: "",
-    email: "",
+    type: "",
     amount: 0,
     status: "Draft",
     issueDate: "",
@@ -27,6 +29,57 @@ export default function AddChallan() {
     itemCount: 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [items, setItems] = useState<CartItem[]>([
+    {
+      id: String(Date.now()),
+      item_id: "",
+      item_name: "",
+      quantity: "1",
+      rate: "0",
+      discount: "0",
+    },
+  ]);
+
+  const addItem = () => {
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(Date.now() + Math.random()),
+        item_id: "",
+        item_name: "",
+        quantity: "1",
+        rate: "0",
+        discount: "0",
+      },
+    ]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length > 1)
+      setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleItemChange = (
+    index: number,
+    field: keyof CartItem,
+    value: string
+  ) => {
+    setItems((prev) => {
+      const next = [...prev];
+      // @ts-ignore
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const total = items.reduce((sum, it) => {
+    const q = parseFloat((it.quantity as any) || "0") || 0;
+    const r = parseFloat((it.rate as any) || "0") || 0;
+    const d = parseFloat((it.discount as any) || "0") || 0;
+    const row = Math.max(0, q * r - d);
+    return sum + row;
+  }, 0);
 
   useEffect(() => {
     if (isEditing && id) {
@@ -46,11 +99,21 @@ export default function AddChallan() {
     if (!formData.customerName || formData.customerName.trim().length < 2) {
       newErrors.customerName = "Customer name is required";
     }
-    if (!formData.deliveryAddress || formData.deliveryAddress.trim().length < 5) {
+    if (
+      !formData.deliveryAddress ||
+      formData.deliveryAddress.trim().length < 5
+    ) {
       newErrors.deliveryAddress = "Delivery address is required";
     }
-    if (!formData.amount || formData.amount <= 0) {
-      newErrors.amount = "Amount must be greater than 0";
+    const itemsTotal = items.reduce((sum, it) => {
+      const q = parseFloat((it.quantity as any) || "0") || 0;
+      const r = parseFloat((it.rate as any) || "0") || 0;
+      const d = parseFloat((it.discount as any) || "0") || 0;
+      const row = Math.max(0, q * r - d);
+      return sum + row;
+    }, 0);
+    if (itemsTotal <= 0) {
+      newErrors.amount = "Add at least one item with a positive total";
     }
     if (!formData.issueDate) {
       newErrors.issueDate = "Issue date is required";
@@ -74,12 +137,17 @@ export default function AddChallan() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "amount" || name === "itemCount" ? parseInt(value) || 0 : value,
+      [name]:
+        name === "amount" || name === "itemCount"
+          ? parseInt(value) || 0
+          : value,
     }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -88,32 +156,36 @@ export default function AddChallan() {
 
   return (
     <Layout>
-      {/* Fixed Header */}
-      <div className="border-b border-border pb-4 mb-3">
-        <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(RedirectionRoutes.challans)}
-              className="p-1 rounded-lg hover:bg-muted transition-colors"
-              title="Back"
-            >
-              <ArrowLeft size={20} className="text-foreground" />
-            </button>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">
-                {isEditing ? "Edit Challan" : "Add Challan"}
-              </h1>
-              <p className="mt-0.5 text-xs text-muted-foreground">
-                {isEditing ? "Update challan details" : "Create a new challan"}
-              </p>
-            </div>
-                  </div>
-      </div>
-
       {/* Main Container with Scrollable Content and Fixed Footer */}
-      <div className="w-full flex flex-col gap-0" style={{ height: "calc(100vh - 73px - 80px)" }}>
+      <div
+        className="w-full flex flex-col gap-0 pt-4"
+        style={{ height: "calc(100vh - 55px )" }}
+      >
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mb-4">
           <Card className="p-6 max-w-3xl">
+            {/* Header (scrollable) */}
+            <div className="border-b border-border pb-4 mb-3">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate(RedirectionRoutes.challans)}
+                  className="p-1 rounded-lg hover:bg-muted transition-colors"
+                  title="Back"
+                >
+                  <ArrowLeft size={20} className="text-foreground" />
+                </button>
+                <div>
+                  <h1 className="text-xl font-bold text-foreground">
+                    {isEditing ? "Edit Challan" : "Add Challan"}
+                  </h1>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {isEditing
+                      ? "Update challan details"
+                      : "Create a new challan"}
+                  </p>
+                </div>
+              </div>
+            </div>
             <form id="challan-form" className="space-y-6">
               {/* Challan Number and Status */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,7 +206,9 @@ export default function AddChallan() {
                     }`}
                   />
                   {errors.challanNumber && (
-                    <p className="text-xs text-destructive mt-1">{errors.challanNumber}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.challanNumber}
+                    </p>
                   )}
                 </div>
 
@@ -157,7 +231,7 @@ export default function AddChallan() {
                 </div>
               </div>
 
-              {/* Customer Name and Email */}
+              {/* Customer Name and Sales Person */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
@@ -176,62 +250,34 @@ export default function AddChallan() {
                     }`}
                   />
                   {errors.customerName && (
-                    <p className="text-xs text-destructive mt-1">{errors.customerName}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.customerName}
+                    </p>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-2">
-                    Email
+                    Type
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    value={formData.email || ""}
+                    type="text"
+                    name="type"
+                    value={(formData as any).type || ""}
                     onChange={handleChange}
-                    placeholder="customer@example.com"
+                    placeholder="e.g., Delivery, Return"
                     className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                   />
                 </div>
               </div>
 
-              {/* Amount and Item Count */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-2">
-                    Amount <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="amount"
-                    value={formData.amount || 0}
-                    onChange={handleChange}
-                    placeholder="0.00"
-                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                      errors.amount
-                        ? "border-destructive bg-destructive/5 focus:border-destructive"
-                        : "border-border bg-background focus:border-primary"
-                    }`}
-                  />
-                  {errors.amount && (
-                    <p className="text-xs text-destructive mt-1">{errors.amount}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-2">
-                    Item Count
-                  </label>
-                  <input
-                    type="number"
-                    name="itemCount"
-                    value={formData.itemCount || 0}
-                    onChange={handleChange}
-                    placeholder="0"
-                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                  />
-                </div>
-              </div>
+              {/* Items Table */}
+              <CartItemsTable
+                items={items}
+                onAdd={addItem}
+                onRemove={removeItem}
+                onChangeItem={handleItemChange}
+              />
 
               {/* Delivery Address */}
               <div>
@@ -251,7 +297,9 @@ export default function AddChallan() {
                   }`}
                 />
                 {errors.deliveryAddress && (
-                  <p className="text-xs text-destructive mt-1">{errors.deliveryAddress}</p>
+                  <p className="text-xs text-destructive mt-1">
+                    {errors.deliveryAddress}
+                  </p>
                 )}
               </div>
 
@@ -273,7 +321,9 @@ export default function AddChallan() {
                     }`}
                   />
                   {errors.issueDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.issueDate}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.issueDate}
+                    </p>
                   )}
                 </div>
 
@@ -293,7 +343,9 @@ export default function AddChallan() {
                     }`}
                   />
                   {errors.expectedDate && (
-                    <p className="text-xs text-destructive mt-1">{errors.expectedDate}</p>
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.expectedDate}
+                    </p>
                   )}
                 </div>
               </div>
@@ -301,29 +353,35 @@ export default function AddChallan() {
           </Card>
         </div>
 
-                      {/* Fixed Footer with Buttons */}
+        {/* Fixed Footer with Buttons */}
         <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0">
-          <div className="flex gap-3 max-w-3xl">
-            <Button
-              type="submit"
-              form="challan-form"
-              disabled={isLoading}
-              onClick={handleSubmit}
-              className="bg-primary text-white text-sm"
-            >
-              {isLoading ? "Saving..." : isEditing ? "Update Challan" : "Add Challan"}
-            </Button>
-            <Button
-              type="button"
-              onClick={() => navigate(RedirectionRoutes.challans)}
-              variant="outline"
-              className="text-sm"
-            >
-              Cancel
-            </Button>
+          <div className="mx-auto w-full  flex items-center justify-start">
+            <div className="flex gap-3">
+              <Button
+                type="submit"
+                form="challan-form"
+                disabled={isLoading}
+                onClick={handleSubmit}
+                className="bg-primary text-white text-sm"
+              >
+                {isLoading
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Challan"
+                    : "Add Challan"}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => navigate(RedirectionRoutes.challans)}
+                variant="outline"
+                className="text-sm"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </Layout>
   );
 }

@@ -68,7 +68,7 @@ export const customerList: Customer[] = [
     },
 ];
 
-export const quoteList: Quote[] = [
+export const quoteList = [
     {
         id: "1",
         quoteNumber: "QT-2024-001",
@@ -79,6 +79,10 @@ export const quoteList: Quote[] = [
         issueDate: "2024-06-20",
         expiryDate: "2024-07-20",
         notes: "Enterprise software package",
+        cart_items: [
+            { id: "ci-1", item_id: "itm-001", item_name: "Software License", quantity: "1", rate: "15000", discount: "0" },
+            { id: "ci-2", item_id: "itm-002", item_name: "Implementation", quantity: "1", rate: "10000", discount: "0" },
+        ],
     },
     {
         id: "2",
@@ -90,6 +94,9 @@ export const quoteList: Quote[] = [
         issueDate: "2024-06-15",
         expiryDate: "2024-07-15",
         notes: "Consulting services",
+        cart_items: [
+            { id: "ci-3", item_id: "itm-010", item_name: "Consulting Day", quantity: "5", rate: "2500", discount: "0" },
+        ],
     },
     {
         id: "3",
@@ -101,6 +108,10 @@ export const quoteList: Quote[] = [
         issueDate: "2024-06-25",
         expiryDate: "2024-07-25",
         notes: "Web development project",
+        cart_items: [
+            { id: "ci-4", item_id: "itm-020", item_name: "Web Design", quantity: "1", rate: "4000", discount: "0" },
+            { id: "ci-5", item_id: "itm-021", item_name: "Development", quantity: "1", rate: "4750", discount: "0" },
+        ],
     },
     {
         id: "4",
@@ -115,7 +126,7 @@ export const quoteList: Quote[] = [
     },
 ];
 
-export const invoiceList: Invoice[] = [
+export const invoiceList = [
     {
         id: "1",
         invoiceNumber: "INV-2024-001",
@@ -154,7 +165,7 @@ export const invoiceList: Invoice[] = [
     },
 ];
 
-export const recurringList: RecurringInvoice[] = [
+export const recurringList = [
     {
         id: "1",
         invoiceNumber: "REC-INV-001",
@@ -193,7 +204,7 @@ export const recurringList: RecurringInvoice[] = [
     },
 ];
 
-export const challanList: Challan[] = [
+export const challanList = [
     {
         id: "1",
         challanNumber: "CH-2024-001",
@@ -232,7 +243,7 @@ export const challanList: Challan[] = [
     },
 ];
 
-export const paymentList: Payment[] = [
+export const paymentList = [
     {
         id: "1",
         paymentNumber: "PAY-2024-001",
@@ -271,7 +282,7 @@ export const paymentList: Payment[] = [
     },
 ];
 
-export const creditList: CreditNote[] = [
+export const creditList = [
     {
         id: "1",
         creditNumber: "CR-2024-001",

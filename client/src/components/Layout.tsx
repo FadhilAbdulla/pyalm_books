@@ -221,19 +221,19 @@ export function Layout({ children }: LayoutProps) {
   const getSearchPlaceholder = (): string => {
     const segments = location.pathname.split("/").filter(Boolean);
     const mapping: Record<string, string> = {
-      customers: "Search customer",
-      invoices: "Search invoice",
-      quotes: "Search quote",
-      purchases: "Search purchase",
-      products: "Search product",
-      inventory: "Search inventory",
-      payments: "Search payment",
-      credits: "Search credit",
-      recurring: "Search recurring",
-      reports: "Search report",
-      sales: "Search sale",
-      subscription: "Search subscription",
-      banking: "Search banking",
+      customers: "Search Customer...",
+      invoices: "Search Invoice...",
+      quotes: "Search Quote...",
+      purchases: "Search Purchase...",
+      products: "Search Product...",
+      inventory: "Search Inventory...",
+      payments: "Search Payment...",
+      credits: "Search Credit...",
+      recurring: "Search Recurring...",
+      reports: "Search Report...",
+      sales: "Search Sale...",
+      subscription: "Search Subscription...",
+      banking: "Search Banking...",
     };
 
     const matched = segments.find((s) => Boolean(mapping[s]));
@@ -668,7 +668,7 @@ export function Layout({ children }: LayoutProps) {
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto bg-card">
             <div
-              className={`p-3 ${!location.pathname.includes("view") && "lg:p-6"}`}
+              className={`ml-4 p-3${!location.pathname.includes("view") && "lg:px-6"}`}
             >
               <div className="mx-auto max-w-7xl">{children}</div>
             </div>

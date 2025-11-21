@@ -37,7 +37,8 @@ export const QuoteTableColumns: Column[] = [
     {
         name: "Quote #",
         key: "quoteNumber",
-        sort: true
+        sort: true,
+        redirect: "/sales/quotes/view/:id"
     },
     {
         name: "Customer",
@@ -66,7 +67,8 @@ export const InvoiceTableColumns: Column[] = [
     {
         name: "Invoice #",
         key: "invoiceNumber",
-        sort: true
+        sort: true,
+        redirect: "/sales/invoices/view/:id"
     },
     {
         name: "Customer",
@@ -95,7 +97,8 @@ export const RecurringTableColumns: Column[] = [
     {
         name: "Name",
         key: "name",
-        sort: true
+        sort: true,
+        redirect: "/sales/recurring/view/:id"
     },
     {
         name: "Amount",
@@ -119,7 +122,8 @@ export const ChallanTableColumns: Column[] = [
     {
         name: "Challan #",
         key: "challanNumber",
-        sort: true
+        sort: true,
+        redirect: "/sales/challans/view/:id"
     },
     {
         name: "Customer",
@@ -148,7 +152,8 @@ export const PaymentTableColumns: Column[] = [
     {
         name: "Reference",
         key: "referenceNumber",
-        sort: true
+        sort: true,
+        redirect: "/sales/payments/view/:id"
     },
     {
         name: "Customer",
@@ -177,7 +182,8 @@ export const CreditTableColumns: Column[] = [
     {
         name: "Credit #",
         key: "creditNumber",
-        sort: true
+        sort: true,
+        redirect: "/sales/credits/view/:id"
     },
     {
         name: "Customer",

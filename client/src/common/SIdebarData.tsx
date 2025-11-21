@@ -91,21 +91,41 @@ export const SidebarData: MainItem[] = [
         link: RedirectionRoutes.recurring,
         name: "Recurring",
         icon: TrendingUp,
+        customItem: {
+          link: RedirectionRoutes.recurringNew,
+          name: "Add Recurring",
+          icon: Plus,
+        },
       },
       {
         link: RedirectionRoutes.challans,
         name: "Challans",
         icon: FileText,
+        customItem: {
+          link: RedirectionRoutes.challansNew,
+          name: "Add Challans",
+          icon: Plus,
+        },
       },
       {
         link: RedirectionRoutes.payments,
         name: "Payments",
         icon: DollarSign,
+        customItem: {
+          link: RedirectionRoutes.paymentsNew,
+          name: "Add Payments",
+          icon: Plus,
+        },
       },
       {
         link: RedirectionRoutes.credits,
         name: "Credits",
         icon: CreditCard,
+        customItem: {
+          link: RedirectionRoutes.creditsNew,
+          name: "Add Credits",
+          icon: Plus,
+        },
       },
     ],
   },

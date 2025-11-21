@@ -5,8 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { RedirectionRoutes } from "@/common/RedirectionRoutes";
-import { CreditNote } from "@/common/data/demo";
+import type { CreditNote } from "@/common/data/sales.model";
 import { creditList } from "@/common/data/demo";
+import type { CartItem } from "@/common/data/sales.model";
+import CartItemsTable from "@/components/ui/cartItemsTable";
 
 const STATUSES = ["Draft", "Issued", "Applied", "Cancelled"];
 
@@ -19,15 +21,66 @@ export default function AddCredit() {
     creditNumber: "",
     invoiceNumber: "",
     customerName: "",
-    email: "",
+    salesPersonName: "",
     amount: 0,
     status: "Draft",
-    reason: "",
+    subject: "",
     issueDate: "",
     appliedDate: "",
     notes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [items, setItems] = useState<CartItem[]>([
+    {
+      id: String(Date.now()),
+      item_id: "",
+      item_name: "",
+      quantity: "1",
+      rate: "0",
+      discount: "0",
+    },
+  ]);
+
+  const addItem = () => {
+    setItems((prev) => [
+      ...prev,
+      {
+        id: String(Date.now() + Math.random()),
+        item_id: "",
+        item_name: "",
+        quantity: "1",
+        rate: "0",
+        discount: "0",
+      },
+    ]);
+  };
+
+  const removeItem = (index: number) => {
+    if (items.length > 1)
+      setItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleItemChange = (
+    index: number,
+    field: keyof CartItem,
+    value: string
+  ) => {
+    setItems((prev) => {
+      const next = [...prev];
+      // @ts-ignore
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  };
+
+  const total = items.reduce((sum, it) => {
+    const q = parseFloat((it.quantity as any) || "0") || 0;
+    const r = parseFloat((it.rate as any) || "0") || 0;
+    const d = parseFloat((it.discount as any) || "0") || 0;
+    const row = Math.max(0, q * r - d);
+    return sum + row;
+  }, 0);
 
   useEffect(() => {
     if (isEditing && id) {
@@ -50,11 +103,18 @@ export default function AddCredit() {
     if (!formData.customerName || formData.customerName.trim().length < 2) {
       newErrors.customerName = "Customer name is required";
     }
-    if (!formData.reason || formData.reason.trim().length < 3) {
-      newErrors.reason = "Reason is required";
+    if (!formData.subject || (formData.subject as string).trim().length < 3) {
+      newErrors.subject = "Subject is required";
     }
-    if (!formData.amount || formData.amount <= 0) {
-      newErrors.amount = "Amount must be greater than 0";
+    const itemsTotal = items.reduce((sum, it) => {
+      const q = parseFloat((it.quantity as any) || "0") || 0;
+      const r = parseFloat((it.rate as any) || "0") || 0;
+      const d = parseFloat((it.discount as any) || "0") || 0;
+      const row = Math.max(0, q * r - d);
+      return sum + row;
+    }, 0);
+    if (itemsTotal <= 0) {
+      newErrors.amount = "Add at least one item with a positive total";
     }
     if (!formData.issueDate) {
       newErrors.issueDate = "Issue date is required";
@@ -91,273 +151,278 @@ export default function AddCredit() {
 
   return (
     <Layout>
-      {/* Fixed Header */}
-      <div className="border-b border-border pb-4 mb-3">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(RedirectionRoutes.credits)}
-            className="p-1 rounded-lg hover:bg-muted transition-colors"
-            title="Back"
-          >
-            <ArrowLeft size={20} className="text-foreground" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">
-              {isEditing ? "Edit Credit Note" : "Add Credit Note"}
-            </h1>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {isEditing
-                ? "Update credit note details"
-                : "Create a new credit note"}
-            </p>
-          </div>
-                </div>
-      </div>
-
       {/* Main Container with Scrollable Content and Fixed Footer */}
-      <div className="w-full flex flex-col gap-0" style={{ height: "calc(100vh - 73px - 80px)" }}>
+      <div
+        className="w-full flex flex-col gap-0 pt-4"
+        style={{ height: "calc(100vh  - 55px)" }}
+      >
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto mb-4">
           <Card className="p-6 max-w-3xl">
-          <form id="credit-form" className="space-y-6">
-            {/* Credit Number and Invoice Number */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Credit Number <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="creditNumber"
-                  value={formData.creditNumber || ""}
-                  onChange={handleChange}
-                  placeholder="CR-2024-001"
-                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.creditNumber
-                      ? "border-destructive bg-destructive/5 focus:border-destructive"
-                      : "border-border bg-background focus:border-primary"
-                  }`}
-                />
-                {errors.creditNumber && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.creditNumber}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Invoice Number <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="invoiceNumber"
-                  value={formData.invoiceNumber || ""}
-                  onChange={handleChange}
-                  placeholder="INV-2024-001"
-                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.invoiceNumber
-                      ? "border-destructive bg-destructive/5 focus:border-destructive"
-                      : "border-border bg-background focus:border-primary"
-                  }`}
-                />
-                {errors.invoiceNumber && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.invoiceNumber}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Customer Name and Email */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Customer Name <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={formData.customerName || ""}
-                  onChange={handleChange}
-                  placeholder="Enter customer name"
-                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.customerName
-                      ? "border-destructive bg-destructive/5 focus:border-destructive"
-                      : "border-border bg-background focus:border-primary"
-                  }`}
-                />
-                {errors.customerName && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.customerName}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email || ""}
-                  onChange={handleChange}
-                  placeholder="customer@example.com"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Amount and Status */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Amount <span className="text-destructive">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="amount"
-                  value={formData.amount || 0}
-                  onChange={handleChange}
-                  placeholder="0.00"
-                  className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.amount
-                      ? "border-destructive bg-destructive/5 focus:border-destructive"
-                      : "border-border bg-background focus:border-primary"
-                  }`}
-                />
-                {errors.amount && (
-                  <p className="text-xs text-destructive mt-1">
-                    {errors.amount}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-foreground mb-2">
-                  Status
-                </label>
-                <select
-                  name="status"
-                  value={formData.status || "Draft"}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            {/* Header (scrollable) */}
+            <div className="border-b border-border pb-4 mb-3">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate(RedirectionRoutes.credits)}
+                  className="p-1 rounded-lg hover:bg-muted transition-colors"
+                  title="Back"
                 >
-                  {STATUSES.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
+                  <ArrowLeft size={20} className="text-foreground" />
+                </button>
+                <div>
+                  <h1 className="text-xl font-bold text-foreground">
+                    {isEditing ? "Edit Credit Note" : "Add Credit Note"}
+                  </h1>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    {isEditing
+                      ? "Update credit note details"
+                      : "Create a new credit note"}
+                  </p>
+                </div>
               </div>
             </div>
+            <form id="credit-form" className="space-y-6">
+              {/* Credit Number and Invoice Number */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Credit Number <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="creditNumber"
+                    value={formData.creditNumber || ""}
+                    onChange={handleChange}
+                    placeholder="CR-2024-001"
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.creditNumber
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
+                  />
+                  {errors.creditNumber && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.creditNumber}
+                    </p>
+                  )}
+                </div>
 
-            {/* Reason */}
-            <div>
-              <label className="block text-xs font-medium text-foreground mb-2">
-                Reason <span className="text-destructive">*</span>
-              </label>
-              <input
-                type="text"
-                name="reason"
-                value={formData.reason || ""}
-                onChange={handleChange}
-                placeholder="e.g., Damaged goods, return, discount"
-                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                  errors.reason
-                    ? "border-destructive bg-destructive/5 focus:border-destructive"
-                    : "border-border bg-background focus:border-primary"
-                }`}
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Invoice Number <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="invoiceNumber"
+                    value={formData.invoiceNumber || ""}
+                    onChange={handleChange}
+                    placeholder="INV-2024-001"
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.invoiceNumber
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
+                  />
+                  {errors.invoiceNumber && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.invoiceNumber}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Customer Name and Sales Person */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Customer Name <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="customerName"
+                    value={formData.customerName || ""}
+                    onChange={handleChange}
+                    placeholder="Enter customer name"
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.customerName
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
+                  />
+                  {errors.customerName && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.customerName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Sales Person
+                  </label>
+                  <input
+                    type="text"
+                    name="salesPersonName"
+                    value={(formData as any).salesPersonName || ""}
+                    onChange={handleChange}
+                    placeholder="Sales person"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Amount (computed) and Status */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Amount
+                  </label>
+                  <div className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm">
+                    {total.toFixed(2)}
+                  </div>
+                  {errors.amount && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.amount}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    value={formData.status || "Draft"}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  >
+                    {STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Items Table */}
+              <CartItemsTable
+                items={items}
+                onAdd={addItem}
+                onRemove={removeItem}
+                onChangeItem={handleItemChange}
               />
-              {errors.reason && (
-                <p className="text-xs text-destructive mt-1">{errors.reason}</p>
-              )}
-            </div>
 
-            {/* Issue and Applied Dates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Subject */}
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  Issue Date <span className="text-destructive">*</span>
+                  Subject <span className="text-destructive">*</span>
                 </label>
                 <input
-                  type="date"
-                  name="issueDate"
-                  value={formData.issueDate || ""}
+                  type="text"
+                  name="subject"
+                  value={(formData as any).subject || ""}
                   onChange={handleChange}
+                  placeholder="e.g., Damaged goods, return, discount"
                   className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
-                    errors.issueDate
+                    (errors as any).subject
                       ? "border-destructive bg-destructive/5 focus:border-destructive"
                       : "border-border bg-background focus:border-primary"
                   }`}
                 />
-                {errors.issueDate && (
+                {(errors as any).subject && (
                   <p className="text-xs text-destructive mt-1">
-                    {errors.issueDate}
+                    {(errors as any).subject}
                   </p>
                 )}
               </div>
 
+              {/* Issue and Applied Dates */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Issue Date <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="issueDate"
+                    value={formData.issueDate || ""}
+                    onChange={handleChange}
+                    className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none transition-colors ${
+                      errors.issueDate
+                        ? "border-destructive bg-destructive/5 focus:border-destructive"
+                        : "border-border bg-background focus:border-primary"
+                    }`}
+                  />
+                  {errors.issueDate && (
+                    <p className="text-xs text-destructive mt-1">
+                      {errors.issueDate}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-2">
+                    Applied Date (Optional)
+                  </label>
+                  <input
+                    type="date"
+                    name="appliedDate"
+                    value={formData.appliedDate || ""}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Notes */}
               <div>
                 <label className="block text-xs font-medium text-foreground mb-2">
-                  Applied Date (Optional)
+                  Notes
                 </label>
-                <input
-                  type="date"
-                  name="appliedDate"
-                  value={formData.appliedDate || ""}
+                <textarea
+                  name="notes"
+                  value={formData.notes || ""}
                   onChange={handleChange}
+                  placeholder="Add any additional notes"
+                  rows={4}
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
                 />
               </div>
-            </div>
+            </form>
+          </Card>
+        </div>
 
-            {/* Notes */}
-            <div>
-              <label className="block text-xs font-medium text-foreground mb-2">
-                Notes
-              </label>
-              <textarea
-                name="notes"
-                value={formData.notes || ""}
-                onChange={handleChange}
-                placeholder="Add any additional notes"
-                rows={4}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              />
+        {/* Fixed Footer with Buttons */}
+        <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0 ">
+          <div className="mx-auto w-full  flex items-center justify-start">
+            <div className="flex gap-3">
+              <Button
+                type="submit"
+                form="credit-form"
+                disabled={isLoading}
+                onClick={handleSubmit}
+                className="bg-primary text-white text-sm"
+              >
+                {isLoading
+                  ? "Saving..."
+                  : isEditing
+                    ? "Update Credit Note"
+                    : "Add Credit Note"}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => navigate(RedirectionRoutes.credits)}
+                variant="outline"
+                className="text-sm"
+              >
+                Cancel
+              </Button>
             </div>
-          </form>
-        </Card>
-      </div>
-
-              {/* Fixed Footer with Buttons */}
-        <div className="border-t border-border bg-background px-6 py-4 flex-shrink-0">
-          <div className="flex gap-3 max-w-3xl">
-          <Button
-            type="submit"
-            form="credit-form"
-            disabled={isLoading}
-            onClick={handleSubmit}
-            className="bg-primary text-white text-sm"
-          >
-            {isLoading
-              ? "Saving..."
-              : isEditing
-                ? "Update Credit Note"
-                : "Add Credit Note"}
-          </Button>
-          <Button
-            type="button"
-            onClick={() => navigate(RedirectionRoutes.credits)}
-            variant="outline"
-            className="text-sm"
-          >
-            Cancel
-          </Button>
+          </div>
         </div>
       </div>
-    </div>
     </Layout>
   );
 }
